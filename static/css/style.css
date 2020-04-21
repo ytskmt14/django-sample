@@ -1,19 +1,1 @@
 @import url("semantic.min.css");
-
-/* header */
-a {
-  color: black;
-}
-
-/* content */
-#main-text {
-  color: #828282;
-  font-family: 'Lato', sans-serif;
-}
-
-/* footer */
-footer {
-  color: lightgrey;
-  float: right;
-  margin-top: -15px;
-}
