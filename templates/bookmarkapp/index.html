@@ -1,0 +1,25 @@
+{### base.htmlを継承する ###}
+{### この記述は必ず最初に書く ###}
+{% extends 'base.html' %}
+
+{### staticディレクトリ配下を参照するおまじない ###}
+{% load static %}
+
+{### ページタイトル（タブに表示されるとこ）を定義 ###}
+{### 仮置きしてるので書き換えてください ###}
+{% block page_title %}サンプルページ{% endblock %}
+
+{### ページごとのcssを定義 ###}
+{### なければ何も書かなくてok ###}
+{% block extra_css %}{% endblock  %}
+
+{### ページの内容を定義 ###}
+{### ここに旅行一覧ページのレイアウトを組んでみましょう！ ###}
+{### semantic uiを使って組むなら公式ページへ ###}
+{### https://semantic-ui.com/introduction/getting-started.html ###}
+{% block content %}
+{% endblock %}
+
+{### ページごとのjsを定義 ###}
+{### なければ何も書かなくてok ###}
+{% block extra_js %}{% endblock  %}
