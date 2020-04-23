@@ -34,10 +34,10 @@
                 {##  {% item.date_from %} ~ {% item.date_to %} ##}
                 2020/01/0{{ forloop.counter }} ~ 01/1{{ forloop.counter }}
             </div>
-            <div class="image hover-darken">
+            <a href="#" class="image hover-darken">
                 {## img src="{% item.img_path %}" ##}
                 <img src="https://placehold.jp/150x150.png">
-            </div>
+            </a>
             <div class="content">
                 <h4 class="ui header">
                     {##  {% item.title %} ##}
@@ -51,13 +51,6 @@
         </div>
     </div>
     {% endfor %}
-</div>
-<div class="ui grid">
-    <div class="fourteen wide column">
-    </div>
-    <div class="two wide column">
-        <a href="#" class="ui black button" role="button">ログアウト</a>
-    </div>
 </div>
 {% endblock %}
 
