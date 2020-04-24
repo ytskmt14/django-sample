@@ -1,0 +1,61 @@
+{### base.htmlを継承する ###}
+{% extends 'base.html' %}
+
+{### staticディレクトリ配下を参照するおまじない ###}
+{% load static %}
+
+{### ページタイトル（タブに表示されるとこ）を定義 ###}
+{% block title %}旅のしおり一覧{% endblock %}
+
+{### ページごとのcssを定義 ###}
+{% block extra_css %}
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.css">
+{% endblock  %}
+
+{### ページの内容を定義 ###}
+{### semantic uiを使って組むなら公式ページへ ###}
+{### https://semantic-ui.com/introduction/getting-started.html ###}
+{% block content %}
+<div class="ui grid">
+    <div class="fourteen wide column">
+        <h2 class="ui header">旅のしおり一覧</h2>
+    </div>
+    <div class="two wide column">
+        <a href="#" class="ui blue button" role="button">追加</a>
+    </div>
+</div>
+
+<div class="ui three column grid">
+    {## {% for item in object_list %} ##}
+    {% for _ in ''|center:5 %}
+    <div class="column">
+        <div class="ui fluid card">
+            <div class="header">
+                {##  {% item.date_from %} ~ {% item.date_to %} ##}
+                2020/01/0{{ forloop.counter }} ~ 01/1{{ forloop.counter }}
+            </div>
+            <a href="#" class="image hover-darken">
+                {## img src="{% item.img_path %}" ##}
+                <img src="https://placehold.jp/150x150.png">
+            </a>
+            <div class="content">
+                <h4 class="ui header">
+                    {##  {% item.title %} ##}
+                    海外旅行{{ forloop.counter }}
+                    <div class="ui sub header">
+                        {##  {% item.comment %} ##}
+                        テスト旅行{{ forloop.counter }}です。
+                    </div>
+                </h4>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}
+
+{### ページごとのjsを定義 ###}
+{### なければ何も書かなくてok ###}
+{% block extra_js %}
+<script src="https://cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.js"></script>
+{% endblock  %}

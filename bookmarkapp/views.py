@@ -1,3 +1,8 @@
-from django.shortcuts import render
+from django.views.generic import ListView,TemplateView
 
-# Create your views here.
+# 旅行一覧ページ用View
+# class IndexView(ListView):
+class IndexView(TemplateView):
+    template_name = "bookmarkapp/index.html"
+
+index = IndexView.as_view()
