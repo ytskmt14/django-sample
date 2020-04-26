@@ -1,0 +1,79 @@
+{### base.htmlを継承する ###}
+{% extends 'base.html' %}
+
+{### staticディレクトリ配下を参照するおまじない ###}
+{% load static %}
+
+{### ページタイトル（タブに表示されるとこ）を定義 ###}
+{% block title %}旅のしおり詳細{% endblock %}
+
+{### ページごとのcssを定義 ###}
+{% block extra_css %}
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.css">
+<script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.js"></script>
+{% endblock  %}
+
+{% block content %}
+<!-- タイトル -->
+<div class="ui grid">
+    <div class="fourteen wide column">
+        <h2 class="ui header">
+            {## {% object.estimated_time %} {% object.sub_title %} ##}
+            11:00 マーケットに買い物に行く１
+        </h2>
+    </div>
+    <div class="two wide column">
+        <a href="#" class="ui green button" role="button">編集</a>
+    </div>
+</div>
+<!-- 内容 -->
+<div class="ui items">
+    <div class="item" style="margin-bottom: 30px;">
+        {## {% if sub_object.hp_url is not None %} ##}
+        {## <a href="sub_object.hp_url" class="mini ui blue button position" id="detail_button" role="button"> ##}
+        <a href="#" class="mini ui blue button position" id="detail_button" role="button">
+            HP
+        </a>
+        {## {% endif %} ##}
+        {## {% if sub_object.map_url is not None %} ##}
+        {## <a href="sub_object.map_url" class="mini ui teal button" id="detail_button" role="button"> </a>##}
+        <a href="#" class="mini ui teal button" id="detail_button" role="button">
+            地図
+        </a>
+        {## {% endif %} ##}
+        {## {% if sub_object.root_url is not None %} ##}
+        {## <a href="sub_object.root_url" class="mini ui grey button" id="detail_button" role="button"> </a>##}
+        <a href="#" class="mini ui grey button" id="detail_button" role="button">
+            経路
+        </a>
+        {## {% endif %} ##}
+    </div>
+    {## {% for item in sub_object %} ##}
+    {% for _ in ''|center:4 %}
+    <div class="item sub_object" style="margin: 20px auto;">
+        <div class="ui small image">
+            {## {% if detailed_object.img_url is not None %} ##}
+            {% if forloop.counter != 2 %}
+            <img src="https://placehold.jp/150x150.png">
+            {% endif %}
+        </div>
+        <div class="middle aligned content">
+            <div class="header">
+                有名なマーケット{{ forloop.counter }}で買い物！
+            </div>
+            <div class="description">
+                <li>どうしても買いたいお土産があるので買う。</li>
+                <li>予算は3000円</li>
+                <li>値下げ交渉をする。</li>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+<!-- </div> -->
+{% endblock %}
+
+{### ページごとのjsを定義 ###}
+{% block extra_js %}
+{% endblock  %}

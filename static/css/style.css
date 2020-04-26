@@ -13,3 +13,7 @@
 .hover-darken:hover::before {
     background-color: rgba(0, 0, 0, 0.3);
 }
+
+#detail_button {
+    margin-left: 20px;
+}

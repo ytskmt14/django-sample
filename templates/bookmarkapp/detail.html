@@ -1,0 +1,93 @@
+{### base.htmlを継承する ###}
+{% extends 'base.html' %}
+
+{### staticディレクトリ配下を参照するおまじない ###}
+{% load static %}
+
+{### ページタイトル（タブに表示されるとこ）を定義 ###}
+{% block title %}旅のしおり詳細{% endblock %}
+
+{### ページごとのcssを定義 ###}
+{% block extra_css %}
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.css">
+<script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.js"></script>
+{% endblock  %}
+
+{### ページの内容を定義 ###}
+{% block content %}
+<!-- タイトル -->
+<div class="ui grid">
+    <div class="thirteen wide column">
+        <h2 class="ui header">
+            {## {% object.date_from %} ~ {% object.date_to %}  {% object.title %} ##}
+            2020/01/01 ~ 2020/01/05 インド旅行
+        </h2>
+    </div>
+    <div class="three wide column">
+        <a href="#" class="ui green button" role="button">編集</a>
+        <a href="#" class="ui black button" role="button">戻る</a>
+    </div>
+</div>
+<!-- 日程 -->
+<div class="ui styled accordion" style="margin-top: 40px;">
+    {## {% for item in sub_object %} ##}
+    {% for _ in ''|center:3 %}
+    <div class="title">
+        <i class="calendar check outline icon"></i>
+        {## {% item.estimated_time %} {% item.sub_title %} ##}
+        1{{ forloop.counter }}:00 マーケットに買い物に行く{{ forloop.counter }}
+        <!-- 詳細画面へ -->
+        <a href="#" class="mini ui orange button position" id="detail_button" role="button">
+            詳細
+        </a>
+        <!-- HP、地図、経路案内のリンクを設定していたらボタンを配置する -->
+        {## {% if item.hp_url is not None %} ##}
+        {## <a href="sub_object.hp_url" class="mini ui blue button position" id="detail_button" role="button"> ##}
+        <a href="#" class="mini ui blue button position" id="detail_button" role="button">
+            HP
+        </a>
+        {## {% endif %} ##}
+        {## {% if item.map_url is not None %} ##}
+        {## <a href="sub_object.map_url" class="mini ui teal button" id="detail_button" role="button"> </a>##}
+        <a href="#" class="mini ui teal button" id="detail_button" role="button">
+            地図
+        </a>
+        {## {% endif %} ##}
+        {## {% if item.root_url is not None %} ##}
+        {## <a href="sub_object.root_url" class="mini ui grey button" id="detail_button" role="button"> </a>##}
+        <a href="#" class="mini ui grey button" id="detail_button" role="button">
+            経路
+        </a>
+        {## {% endif %} ##}
+    </div>
+    <div class="content">
+        {## {% for sub_item in sub_object %} ##}
+        {% for _ in ''|center:4 %}
+        <ul>
+            <!-- ユーザーが重要度を設定することができ（1：最重要、2：重要、3：普通）、それに応じてフォントを変更 -->
+            {## {% if sub_item.importance == 1 %}##}
+            {% if forloop.counter == 1 %}
+            <li style="color: red; font-weight: bold;">
+                {## {% elif sub_item.importance == 2 %}##}
+                {% elif forloop.counter == 2 %}
+            <li style="font-weight: bold;">
+                {% else %}
+            <li>
+                {% endif %}
+                {## {% sub_item.content %}##}
+                有名なマーケット{{ forloop.counter }}で買い物！
+            </li>
+        </ul>
+        {% endfor %}
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}
+
+{### ページごとのjsを定義 ###}
+{% block extra_js %}
+<script type="text/javascript">
+    $(".ui.accordion").accordion();
+</script>
+{% endblock  %}
