@@ -94,24 +94,18 @@
                 <li class="sub_content">もっと値下げ交渉をする。</li>
             </div>
         </div>
-        <div class="actions">
-            <a href="#" class="ui green button" role="button">編集</a>
-        </div>
     </div>
 </div>
 {% endblock %}
 
 {### ページごとのjsを定義 ###}
 {% block extra_js %}
-<script src="https://cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.js"></script>
 <script type="text/javascript">
+
     $(".ui.accordion").accordion();
-</script>
-<script>
-    $(function () {
-        $(".sub_detail").click(function () {
-            $('.ui.modal').modal('show');
-        });
+
+    $(".sub_detail").click(function () {
+        $('.ui.modal').modal('show');
     });
 </script>
 {% endblock  %}
