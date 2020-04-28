@@ -13,8 +13,14 @@
 
 {### ページの内容を定義 ###}
 {% block content %}
+{### パンくずリスト ###}
+<div class="ui breadcrumb">
+  <a class="section" href="{% url 'bookmarkapp:index' %}">旅行のしおり一覧</a>
+  <div class="divider"> > </div>
+  <div class="active section">2020/01/01 ~ 2020/01/05 インド旅行</div>
+</div>
 <!-- タイトル -->
-<div class="ui grid">
+<div class="ui grid" style="margin-top:30px;">
     <div class="thirteen wide column">
         <h2 class="ui header">
             {## {% object.date_from %} ~ {% object.date_to %}  {% object.title %} ##}
