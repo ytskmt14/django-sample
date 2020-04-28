@@ -9,7 +9,6 @@
 
 {### ページごとのcssを定義 ###}
 {% block extra_css %}
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.css">
 {% endblock  %}
 
 {### ページの内容を定義 ###}
@@ -34,7 +33,7 @@
                 {##  {% item.date_from %} ~ {% item.date_to %} ##}
                 2020/01/0{{ forloop.counter }} ~ 01/1{{ forloop.counter }}
             </div>
-            <a href="#" class="image hover-darken">
+            <a href="{% url 'bookmarkapp:detail' %}" class="image hover-darken">
                 {## img src="{% item.img_path %}" ##}
                 <img src="https://placehold.jp/150x150.png">
             </a>
