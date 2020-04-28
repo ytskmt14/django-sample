@@ -3,42 +3,43 @@
 {### staticディレクトリ配下を参照できるようにするおまじない ###}
 {% load static %}
 <html lang="ja">
-  <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    {### ページタイトルを記載するための枠 ###}
-    {### ページタイトルは、各ページ（継承先）で異なるため、block化しておく ###}
-    <title>{% block title %}{% endblock  %}</title>
 
-    {# css #}
-    {### cssファイルの読み込みを行う ###}
-    {### href属性で指定した書き方で、django-sample/static/css/style.cssを読みに行ける ###}
-    {### style.cssの中でsemantic uiのcssファイルをimportしてるので、これだけでok ###}
-    <link rel="stylesheet" href="{% static 'css/style.css'%}"
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  {### ページタイトルを記載するための枠 ###}
+  {### ページタイトルは、各ページ（継承先）で異なるため、block化しておく ###}
+  <title>{% block title %}{% endblock  %}</title>
 
-    {### 各ページごとにcssを定義する場合もあるため、blockを用意 ###}
-    {% block extra_css %}{% endblock %}
-  </head>
-  <body>
-    <div class="ui container">
-      {# header menu #}
-      {### ヘッダーは画面共通の予定なので、baseファイルに書く ###}
-      <div class="ui menu">
-        <div class="header item">
-          <a href="#">XXX APP</a>
-        </div>
+  {# css #}
+  {### cssファイルの読み込みを行う ###}
+  {### href属性で指定した書き方で、django-sample/static/css/style.cssを読みに行ける ###}
+  {### style.cssの中でsemantic uiのcssファイルをimportしてるので、これだけでok ###}
+  <link rel="stylesheet" href="{% static 'css/style.css'%}" {### 各ページごとにcssを定義する場合もあるため、blockを用意 ###}
+    {% block extra_css %}{% endblock %} </head>
+
+<body>
+  <div class="ui container">
+    {# header menu #}
+    {### ヘッダーは画面共通の予定なので、baseファイルに書く ###}
+    <div class="ui menu">
+      <div class="header item">
+        <a href="#">XXX APP</a>
       </div>
-      {# content #}
-      {### 継承先のページ内容のためのblockをおく ###}
-      {% block content %}{% endblock %}
-
-      {# footer #}
-      {### フッターは画面共通の予定なので、baseファイルに書く ###}
     </div>
-    {# javascript #}
-    {### jsファイルの読み込みを行う ###}
-    <script src="{% static 'js/semantic.min.js' %}"></script>
-    {### 各ページごとにjavascriptを定義する場合もあるため、blockを用意 ###}
-    {% block extra_js %}{% endblock  %}
-  </body>
+    {# content #}
+    {### 継承先のページ内容のためのblockをおく ###}
+    {% block content %}{% endblock %}
+
+    {# footer #}
+    {### フッターは画面共通の予定なので、baseファイルに書く ###}
+  </div>
+  {# javascript #}
+  {### jsファイルの読み込みを行う ###}
+  <script src="{% static 'js/semantic.min.js' %}"></script>
+  <script src="{% static 'js/jquery.min.js' %}"></script>
+  {### 各ページごとにjavascriptを定義する場合もあるため、blockを用意 ###}
+  {% block extra_js %}{% endblock  %}
+</body>
+
 </html>

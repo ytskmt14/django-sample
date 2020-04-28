@@ -11,8 +11,3 @@ class DetailView(TemplateView):
     template_name = "bookmarkapp/detail.html"
 
 detail = DetailView.as_view()
-
-class SubDetailView(TemplateView):
-    template_name = "bookmarkapp/sub_detail.html"
-
-sub_detail = SubDetailView.as_view()
