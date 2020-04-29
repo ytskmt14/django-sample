@@ -15,9 +15,9 @@
 {% block content %}
 {### パンくずリスト ###}
 <div class="ui breadcrumb">
-  <a class="section" href="{% url 'bookmarkapp:index' %}">旅行のしおり一覧</a>
-  <div class="divider"> > </div>
-  <div class="active section">2020/01/01 ~ 2020/01/05 インド旅行</div>
+    <a class="section" href="{% url 'bookmarkapp:index' %}">旅行のしおり一覧</a>
+    <div class="divider"> > </div>
+    <div class="active section">2020/01/01 ~ 2020/01/05 インド旅行</div>
 </div>
 <!-- タイトル -->
 <div class="ui grid" style="margin-top:30px;">
@@ -66,25 +66,27 @@
     <!-- モーダル表示部分 -->
     <div class="ui modal">
         <i class="close icon"></i>
-        <div class="header">
+        <div class="header"">
             {## {% sub_item.content %}##}
             11:00　有名なマーケットで買い物！
             {## {% if sub_item.hp_url is not None %} ##}
             {## <a href="sub_object.hp_url" class="mini ui blue button position" role="button" style="margin-left: 50px;"> ##}
-            <a href="#" class="mini ui blue button position" id="detail_button" role="button"
-                style="margin-left: 50px;">
-                HP
+            <a href=" #" class="mini ui blue button position" id="detail_button" role="button"
+            style="position: absolute; right: 160px;">
+            HP
             </a>
             {## {% endif %} ##}
             {## {% if sub_item.map_url is not None %} ##}
             {## <a href="sub_object.map_url" class="mini ui teal button" id="detail_button" role="button" style="margin-left: 20px;"> </a>##}
-            <a href="#" class="mini ui teal button" id="detail_button" role="button" style="margin-left: 20px;">
+            <a href="#" class="mini ui teal button" id="detail_button" role="button"
+                style="position: absolute; right: 90px;">
                 地図
             </a>
             {## {% endif %} ##}
             {## {% if sub_item.root_url is not None %} ##}
             {## <a href="sub_object.root_url" class="mini ui grey button" id="detail_button" role="button" style="margin-left: 20px;"> </a>##}
-            <a href="#" class="mini ui grey button" id="detail_button" role="button" style="margin-left: 20px;">
+            <a href="#" class="mini ui grey button" id="detail_button" role="button"
+                style="position: absolute; right: 20px;">
                 経路
             </a>
             {## {% endif %} ##}
