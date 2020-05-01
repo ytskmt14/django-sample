@@ -26,18 +26,37 @@
       <div class="header item">
         <a href="#">XXX APP</a>
       </div>
+      <div class="right menu">
+        <div class="ui dropdown">
+          <i id="header-menu" class="bars big icon" style="margin:10px;"></i>
+          <div class="menu">
+            <a href="#" class="item">会員情報</a>
+            <a href="#" class="item">ログアウト</a>
+          </div>
+        </div>
+      </div>
     </div>
     {# content #}
     {### 継承先のページ内容のためのblockをおく ###}
     {% block content %}{% endblock %}
 
+    <div class="ui divider"></div>
     {# footer #}
     {### フッターは画面共通の予定なので、baseファイルに書く ###}
+    <footer>
+      <p style="text-align:center;">©︎ 2020　naoto613&ytskmt14</p>
+    </footer>
   </div>
   {# javascript #}
   {### jsファイルの読み込みを行う ###}
   <script src="{% static 'js/jquery.min.js' %}"></script>
   <script src="{% static 'js/semantic.min.js' %}"></script>
+  <script>
+    $('#header-menu').click(function(){
+      $('.ui.dropdown')
+        .dropdown();
+    });
+  </script>
   {### 各ページごとにjavascriptを定義する場合もあるため、blockを用意 ###}
   {% block extra_js %}{% endblock  %}
 </body>
