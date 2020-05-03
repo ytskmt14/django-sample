@@ -15,8 +15,9 @@
   {### cssファイルの読み込みを行う ###}
   {### href属性で指定した書き方で、django-sample/static/css/style.cssを読みに行ける ###}
   {### style.cssの中でsemantic uiのcssファイルをimportしてるので、これだけでok ###}
-  <link rel="stylesheet" href="{% static 'css/style.css'%}" {### 各ページごとにcssを定義する場合もあるため、blockを用意 ###}
-    {% block extra_css %}{% endblock %} </head>
+  <link rel="stylesheet" href="{% static 'css/style.css'%}"
+  {### 各ページごとにcssを定義する場合もあるため、blockを用意 ###}
+  {% block extra_css %}{% endblock %} </head>
 
 <body>
   <div class="ui container">

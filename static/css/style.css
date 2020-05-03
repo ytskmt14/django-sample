@@ -14,10 +14,6 @@
     background-color: rgba(0, 0, 0, 0.3);
 }
 
-.sub_detail:hover {
-    text-decoration: underline;
-}
-
 .sub_content {
     font-size: 1.2em;
     margin-bottom: 10px;

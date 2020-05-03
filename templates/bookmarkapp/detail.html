@@ -13,107 +13,98 @@
 
 {### ページの内容を定義 ###}
 {% block content %}
-{### パンくずリスト ###}
-<div class="ui breadcrumb">
-    <a class="section" href="{% url 'bookmarkapp:index' %}">旅行のしおり一覧</a>
-    <div class="divider"> > </div>
-    <div class="active section">2020/01/01 ~ 2020/01/05 インド旅行</div>
-</div>
-<!-- タイトル -->
-<div class="ui grid" style="margin-top:30px;">
-    <div class="thirteen wide column">
-        <h2 class="ui header">
-            {## {% object.date_from %} ~ {% object.date_to %}  {% object.title %} ##}
-            2020/01/01 ~ 2020/01/05 インド旅行
-        </h2>
-    </div>
-    <div class="three wide column">
-        <a href="#" class="ui green button" role="button">編集</a>
-        <a href="{% url 'bookmarkapp:index' %}" class="ui black button" role="button">戻る</a>
-    </div>
-</div>
-<!-- 日程 -->
-<div class="ui styled accordion" style="margin-top: 40px;">
-    {## {% for item in sub_object %} ##}
-    {% for _ in ''|center:3 %}
-    <div class="title">
-        <i class="calendar check outline icon"></i>
-        {## {% item.date %}　{% item.sub_title %} ##}
-        2020/01/0{{ forloop.counter }}　行きたい土地{{ forloop.counter }}に行く！
-        <!-- HP、地図、経路案内のリンクを設定していたらボタンを配置する -->
-    </div>
-    <div class="content">
-        {## {% for sub_item in sub_object %} ##}
-        {% for _ in ''|center:4 %}
-        <ul>
-            <!-- ユーザーが重要度を設定することができ（1：最重要、2：重要、3：普通）、それに応じてフォントを変更 -->
-            {## {% if sub_item.importance == 1 %}##}
-            {% if forloop.counter == 1 %}
-            <li class="sub_detail" style="color: red; font-weight: bold;">
-                {## {% elif sub_item.importance == 2 %}##}
-                {% elif forloop.counter == 2 %}
-            <li class="sub_detail" style="font-weight: bold;">
-                {% else %}
-            <li class="sub_detail">
-                {% endif %}
-                {## {% item.estimated_time %}　{% item.content %} ##}
-                1{{ forloop.counter }}:00　有名なマーケット{{ forloop.counter }}で買い物！
-            </li>
-        </ul>
+  {### パンくずリスト ###}
+  <div class="ui breadcrumb">
+      <a class="section" href="{% url 'bookmarkapp:index' %}">旅行のしおり一覧</a>
+      <div class="divider"> > </div>
+      <div class="active section">2020/01/01 ~ 2020/01/05 インド旅行</div>
+  </div>
+  <!-- タイトル -->
+  <div class="ui grid" style="margin-top:30px;">
+      <div class="thirteen wide column">
+          <h2 class="ui header">
+              {## {% object.date_from %} ~ {% object.date_to %}  {% object.title %} ##}
+              2020/01/01 ~ 2020/01/05 インド旅行
+          </h2>
+      </div>
+      <div class="three wide column">
+          <a href="#" class="ui green button" role="button">編集</a>
+          <a href="{% url 'bookmarkapp:index' %}" class="ui black button" role="button">戻る</a>
+      </div>
+  </div>
+  <!-- 日程 -->
+  <div class="ui grid">
+    <div class="four wide column">
+      <div class="ui vertical fluid tabular menu">
+        {% for schedule in schedule_list %}
+          <div class="{% if forloop.counter == 1 %} active {% endif %}item"
+            data-tab="item{{ forloop.counter }}">{{ schedule }}</div>
         {% endfor %}
+      </div>
     </div>
-    {% endfor %}
-    <!-- モーダル表示部分 -->
-    <div class="ui modal">
-        <i class="close icon"></i>
-        <div class="header">
-            {## {% sub_item.content %}##}
-            11:00　有名なマーケットで買い物！
-            {## {% if sub_item.hp_url is not None %} ##}
-            {## <a href="sub_object.hp_url" class="mini ui blue button position" role="button" style="position: absolute; right: 160px;"> ##}
-            <a href=" #" class="mini ui blue button position" id="detail_button" role="button"
-                style="position: absolute; right: 160px;">
-                HP
-            </a>
-            {## {% endif %} ##}
-            {## {% if sub_item.map_url is not None %} ##}
-            {## <a href="sub_object.map_url" class="mini ui teal button" id="detail_button" role="button" style="position: absolute; right: 90px;"> </a>##}
-            <a href="#" class="mini ui teal button" id="detail_button" role="button"
-                style="position: absolute; right: 90px;">
-                地図
-            </a>
-            {## {% endif %} ##}
-            {## {% if sub_item.root_url is not None %} ##}
-            {## <a href="sub_object.root_url" class="mini ui grey button" id="detail_button" role="button" style="position: absolute; right: 20px;"> </a>##}
-            <a href="#" class="mini ui grey button" id="detail_button" role="button"
-                style="position: absolute; right: 20px;">
-                経路
-            </a>
-            {## {% endif %} ##}
+    <div class="twelve wide stretched column">
+      {% for schedule in schedule_list %}
+        {# itemのタブコンテンツ #}
+        <div class="ui {% if forloop.counter == 1 %} active {% endif %}tab"
+          data-tab="item{{ forloop.counter }}">
+          <table class="ui unstackable table">
+            <thead>
+              <tr>
+                <th>time</th>
+                <th>plan</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for key, value in plan_list.items %}
+                {% if schedule == value.date %}
+                  <tr>
+                    <td>{{ value.estimated_time }}</td>
+                    <td class="modal{{ forloop.counter }}">{{ value.name }}</td>
+                  </tr>
+                {% endif %}
+              {% endfor %}
+            </tbody>
+          </table>
         </div>
-        <div class="image content">
-            <div class="ui small image">
-                <img src="https://placehold.jp/200x200.png">
-            </div>
-            <div class="description">
-                <li class="sub_content">どうしても買いたいお土産があるので買う。</li>
-                <li class="sub_content">予算は3000円</li>
-                <li class="sub_content">値下げ交渉をする。</li>
-                <li class="sub_content">もっと値下げ交渉をする。</li>
-            </div>
-        </div>
+      {% endfor %}
     </div>
-</div>
+  </div>
+
+  <!-- モーダル表示部分 -->
+  {% for index, plan in plan_list.items %}
+    <div class="ui modal modal{{ forloop.counter }}">
+      <i class="close icon"></i>
+      <div class="header">
+        {{ plan.estimated_time }} {{ plan.name }}
+      </div>
+      <div class="image content">
+          <div class="ui small image">
+              <img src="https://placehold.jp/200x200.png">
+          </div>
+          <div class="description">
+            {% for todo in plan.todos %}
+              <li class="sub_content"> {{todo }}</li>
+            {% empty %}
+              まだやりたいことが登録されていません。
+            {% endfor %}
+          </div>
+      </div>
+    </div>
+  {% endfor %}
 {% endblock %}
 
 {### ページごとのjsを定義 ###}
 {% block extra_js %}
-<script type="text/javascript">
-
-    $(".ui.accordion").accordion();
-
-    $(".sub_detail").click(function () {
-        $('.ui.modal').modal('show');
+  <script>
+    $('.accordion-title').click(function(){
+      $('.ui.accordion').accordion();
     });
-</script>
-{% endblock  %}
+    {% for plan in plan_list %}
+      $('.modal{{ forloop.counter }}').click(function () {
+          $('.ui.modal{{ forloop.counter }}').modal('show');
+      });
+    {% endfor %}
+
+    $('.tabular.menu .item').tab();
+  </script>
+{% endblock %}
