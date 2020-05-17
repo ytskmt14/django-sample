@@ -1,0 +1,61 @@
+{### base.htmlを継承する ###}
+{% extends 'base.html' %}
+
+{### staticディレクトリ配下を参照するおまじない ###}
+{% load static %}
+
+{### ページタイトル（タブに表示されるとこ）を定義 ###}
+{% block title %}ログイン{% endblock %}
+
+{### ページごとのcssを定義 ###}
+{% block extra_css %}
+{% endblock  %}
+
+{% block content %}
+<div class="ui placeholder segment">
+  <div class="ui two column stackable center aligned grid">
+    <div class="ui vertical divider">OR</div>
+    <div class="middle aligned row">
+      {# ログインフォーム #}
+      <div class="column">
+        <p>アカウントをお持ちの方はこちら</p>
+        <form action="{% url 'bookmarkapp:login' %}" method="POST" class="ui form">
+          {{ form.non_field_errors }}
+          {% for field in form %}
+            <div class="field">
+              {{ field }}
+            </div>
+          {% endfor %}
+          <button type="submit" class="ui primary button" >Sign in</button>
+          <input type="hidden" name="next" value="{{ next }}" />
+          {% csrf_token %}
+        </form>
+      </div>
+      {# 新規登録 #}
+      <div class="column">
+        <p>アカウントをお持ちでない方はこちら</p>
+        <a href="#" class="ui primary button">Sign up</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+{% comment %} <form action="" method="POST">
+  <div class="col-md-6 offset-md-3">
+    <div class="card">
+      <div class="card-body">
+        {{ form.non_field_errors }}
+        {% for field in form %}
+          {{ field }}
+          {{ field.errors }}
+          <hr>
+        {% endfor %}
+        <button type="submit" class="btn btn-success btn-lg btn-block" >ログイン</button>
+        <input type="hidden" name="next" value="{{ next }}" />
+        {% csrf_token %}
+      </div>
+    </div>
+  </div>
+</form> {% endcomment %}
+{% endblock %}

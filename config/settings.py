@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'customer.apps.CustomerConfig',
 ]
 
 MIDDLEWARE = [
@@ -121,3 +122,9 @@ USE_TZ = True
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
 STATIC_ROOT = '/var/www/{}/static'.format(PROJECT_NAME)
+
+# Application definition
+AUTH_USER_MODEL = 'customer.Customer'
+
+LOGIN_URL = '/bookmarkapp/login'
+LOGIN_REDIRECT_URL = '/'
