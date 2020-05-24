@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block title %}旅のしおり作成{% endblock %}
+
+{% block extra_css %}
+{% endblock  %}
+
+{% block content %}
+<!-- パンくずリスト -->
+<div class="ui breadcrumb">
+    <a class="section" href="{% url 'bookmarkapp:index' %}">旅行のしおり一覧</a>
+    <div class="divider"> > </div>
+</div>
+
+<!-- メイン処理 -->
+<form action="{% url 'bookmarkapp:detail' %}" method="POST">
+    {{form.as_p}}
+    <input type="submit" value="">
+</form>
+{% endblock %}
+
+{### ページごとのjsを定義 ###}
+{% block extra_js %}
+{% endblock  %}

@@ -25,13 +25,11 @@
 </div>
 
 <div class="ui three column grid">
-    {## {% for item in object_list %} ##}
-    {% for _ in ''|center:5 %}
+    {% for item in object_list %}
     <div class="column">
         <div class="ui fluid card">
             <div class="header">
-                {##  {% item.date_from %} ~ {% item.date_to %} ##}
-                2020/01/0{{ forloop.counter }} ~ 01/1{{ forloop.counter }}
+                {{ item.date_from }} ~ {{ item.date_to }}
             </div>
             <a href="{% url 'bookmarkapp:detail' %}" class="image hover-darken">
                 {## img src="{% item.img_path %}" ##}
@@ -39,11 +37,9 @@
             </a>
             <div class="content">
                 <h4 class="ui header">
-                    {##  {% item.title %} ##}
-                    海外旅行{{ forloop.counter }}
+                    {{ item.title }}
                     <div class="ui sub header">
-                        {##  {% item.comment %} ##}
-                        テスト旅行{{ forloop.counter }}です。
+                        {{ item.memo }}
                     </div>
                 </h4>
             </div>
