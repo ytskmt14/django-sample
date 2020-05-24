@@ -17,14 +17,15 @@
 <div class="ui breadcrumb">
     <a class="section" href="{% url 'bookmarkapp:index' %}">旅行のしおり一覧</a>
     <div class="divider"> > </div>
-    <div class="active section">2020/01/01 ~ 2020/01/05 インド旅行</div>
+    <div class="active section">
+        {{ top_info.date_from }} ~ {{ top_info.date_to }}  {{ top_info.title }}
+    </div>
 </div>
 <!-- タイトル -->
 <div class="ui grid" style="margin-top:30px;">
     <div class="thirteen wide column">
         <h2 class="ui header">
-            {## {% object.date_from %} ~ {% object.date_to %}  {% object.title %} ##}
-            2020/01/01 ~ 2020/01/05 インド旅行
+            {{ top_info.date_from }} ~ {{ top_info.date_to }}  {{ top_info.title }}
         </h2>
     </div>
     <div class="three wide column">
@@ -35,14 +36,13 @@
 <!-- 日程 -->
 <div class="ui styled accordion" style="margin-top: 40px;">
     <!-- Detailの数だけループ -->
-    {% for item in detail_object %}
     <div class="title">
         <i class="calendar check outline icon"></i>
-        {{ item.date }}　{{ item.main_content }}
+        {{ detail.date }}　{{ detail.main_content }}
     </div>
     <div class="content">
         <!-- SubDetailの数だけループ -->
-        {% for sub_item in sub_detail_object %}
+        {% for sub_item in sub_detail_list %}
         <ul>
             <li class="sub_detail{{ forloop.counter }}">
                 {{ sub_item.time }}　{{ sub_item.main_content }}
@@ -50,10 +50,9 @@
         </ul>
         {% endfor %}
     </div>
-    {% endfor %}
 </div>
 <!-- モーダル表示部分 -->
-{% for sub_item in sub_detail_objects %}
+{% for sub_item in sub_detail_list %}
 <div class="ui modal modal{{ forloop.counter }}">
     <i class="close icon"></i>
     <div class="header">
@@ -85,21 +84,21 @@
             {% if sub_item.content1 is None %}
             まだやりたいことが登録されていません。
             {% else %}
-            {% if sub_item.content1 is not None %}
-            <li class="sub_content"> sub_item.content1</li>
-            {% endif %}
-            {% if sub_item.content2 is not None %}
-            <li class="sub_content"> sub_item.content2</li>
-            {% endif %}
-            {% if sub_item.content3 is not None %}
-            <li class="sub_content"> sub_item.content3</li>
-            {% endif %}
-            {% if sub_item.content4 is not None %}
-            <li class="sub_content"> sub_item.content4</li>
-            {% endif %}
-            {% if sub_item.content5 is not None %}
-            <li class="sub_content"> sub_item.content5</li>
-            {% endif %}
+                {% if sub_item.content1 is not None %}
+                    <li class="sub_content"> sub_item.content1</li>
+                {% endif %}
+                {% if sub_item.content2 is not None %}
+                    <li class="sub_content"> sub_item.content2</li>
+                {% endif %}
+                {% if sub_item.content3 is not None %}
+                    <li class="sub_content"> sub_item.content3</li>
+                {% endif %}
+                {% if sub_item.content4 is not None %}
+                    <li class="sub_content"> sub_item.content4</li>
+                {% endif %}
+                {% if sub_item.content5 is not None %}
+                    <li class="sub_content"> sub_item.content5</li>
+                {% endif %}
             {% endif %}
 
         </div>
@@ -113,7 +112,7 @@
 <script type="text/javascript">
 
     $(".ui.accordion").accordion();
-    {% for item in detail_object %}
+    {% for _ in sub_detail_list %}
     $(".sub_detail{{ forloop.counter }}").click(function () {
         $('.ui.modal{{ forloop.counter }}').modal('show');
     });

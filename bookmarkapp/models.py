@@ -19,7 +19,7 @@ class DetailListModel(models.Model):
 
     def __str__(self):
         return self.main_content
-    
+
 class SubDetailListModel(models.Model):
     sub_detail_id = models.AutoField(primary_key=True)
     time = models.TimeField(auto_now=False)
