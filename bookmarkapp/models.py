@@ -1,7 +1,7 @@
 from django.db import models
 
 class TopListModel(models.Model):
-    top_id = models.AutoField(primary_key=True)
+    id = models.AutoField(primary_key=True)
     title = models.CharField(max_length=50)
     memo = models.CharField(max_length=100)
     date_from = models.DateField(auto_now=False)
@@ -15,7 +15,7 @@ class DetailListModel(models.Model):
     detail_id = models.AutoField(primary_key=True)
     date = models.DateField(auto_now=False)
     main_content = models.CharField(max_length=100)
-    top_id = models.ForeignKey(TopListModel, on_delete=models.CASCADE)
+    top = models.ForeignKey(TopListModel, on_delete=models.CASCADE)
 
     def __str__(self):
         return self.main_content
@@ -37,8 +37,8 @@ class SubDetailListModel(models.Model):
     content8 = models.CharField(max_length=100, null=True, blank=True)
     content9 = models.CharField(max_length=100, null=True, blank=True)
     content10 = models.CharField(max_length=100, null=True, blank=True)
-    detail_id = models.ForeignKey(DetailListModel, on_delete=models.CASCADE)
-                 
+    detail = models.ForeignKey(DetailListModel, on_delete=models.CASCADE)
+
     # 未実装
     # image_path = models.FilePathField
     def __str__(self):

@@ -36,41 +36,44 @@
 <!-- 日程 -->
 <div class="ui styled accordion" style="margin-top: 40px;">
     <!-- Detailの数だけループ -->
-    <div class="title">
-        <i class="calendar check outline icon"></i>
-        {{ detail.date }}　{{ detail.main_content }}
-    </div>
-    <div class="content">
-        <!-- SubDetailの数だけループ -->
-        {% for sub_item in sub_detail_list %}
-        <ul>
-            <li class="sub_detail{{ forloop.counter }}">
-                {{ sub_item.time }}　{{ sub_item.main_content }}
-            </li>
-        </ul>
-        {% endfor %}
-    </div>
+    {% for detail in detail_list %}
+        <div class="title">
+            <i class="calendar check outline icon"></i>
+            {{ detail.date }}　{{ detail.main_content }}
+        </div>
+        <div class="content">
+            <ul>
+                {% for sub_detail in sub_detail_list%}
+                    {% if sub_detail.detail.date == detail.date %}
+                        <li class="sub_detail{{ forloop.counter }}">
+                            {{ sub_detail.time }}　{{ sub_detail.main_content }}
+                    </li>
+                    {% endif %}
+                {% endfor %}
+            </ul>
+        </div>
+    {% endfor %}
 </div>
 <!-- モーダル表示部分 -->
-{% for sub_item in sub_detail_list %}
+{% for sub_detail in sub_detail_list %}
 <div class="ui modal modal{{ forloop.counter }}">
     <i class="close icon"></i>
     <div class="header">
-        {{ sub_item.time }} {{ sub_item.main_content }}
-        {% if sub_item.hp_url is not None %}
-        <a href="{{ sub_object.hp_url }}" class="mini ui blue button position" role="button"
+        {{ sub_detail.time }} {{ sub_detail.main_content }}
+        {% if sub_detail.hp_url is not None %}
+        <a href="{{ sub_detail.hp_url }}" class="mini ui blue button position" role="button"
             style="position: absolute; right: 160px;">
             HP
         </a>
         {% endif %}
-        {% if sub_item.map_url is not None %}
-        <a href="{{ sub_object.map_url }}" class="mini ui teal button" id="detail_button" role="button"
+        {% if sub_detail.map_url is not None %}
+        <a href="{{ sub_detail.map_url }}" class="mini ui teal button" id="detail_button" role="button"
             style="position: absolute; right: 90px;"> </a>
         地図
         </a>
         {% endif %}
-        {% if sub_item.root_url is not None %}
-        <a href="{{ sub_object.root_url }}" class="mini ui grey button" id="detail_button" role="button"
+        {% if sub_detail.root_url is not None %}
+        <a href="{{ sub_detail.root_url }}" class="mini ui grey button" id="detail_button" role="button"
             style="position: absolute; right: 20px;"> </a>
         経路
         </a>
@@ -81,26 +84,23 @@
             <img src="https://placehold.jp/200x200.png">
         </div>
         <div class="description">
-            {% if sub_item.content1 is None %}
+            {% if sub_detail.content1 is None %}
             まだやりたいことが登録されていません。
             {% else %}
-                {% if sub_item.content1 is not None %}
-                    <li class="sub_content"> sub_item.content1</li>
+                <li class="sub_content"> sub_detail.content1</li>
+                {% if sub_detail.content2 is not None %}
+                    <li class="sub_content"> sub_detail.content2</li>
                 {% endif %}
-                {% if sub_item.content2 is not None %}
-                    <li class="sub_content"> sub_item.content2</li>
+                {% if sub_detail.content3 is not None %}
+                    <li class="sub_content"> sub_detail.content3</li>
                 {% endif %}
-                {% if sub_item.content3 is not None %}
-                    <li class="sub_content"> sub_item.content3</li>
+                {% if sub_detail.content4 is not None %}
+                    <li class="sub_content"> sub_detail.content4</li>
                 {% endif %}
-                {% if sub_item.content4 is not None %}
-                    <li class="sub_content"> sub_item.content4</li>
-                {% endif %}
-                {% if sub_item.content5 is not None %}
-                    <li class="sub_content"> sub_item.content5</li>
+                {% if sub_detail.content5 is not None %}
+                    <li class="sub_content"> sub_detail.content5</li>
                 {% endif %}
             {% endif %}
-
         </div>
     </div>
 </div>
