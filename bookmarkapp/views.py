@@ -13,9 +13,9 @@ index = IndexView.as_view()
 class DetailView(DetailView):
     template_name = "bookmarkapp/detail.html"
     model = TopListModel
+    context_object_name = 'top_info'
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["top_info"] = TopListModel.objects.filter(id=self.kwargs['pk']).get()
         context["detail_list"] = DetailListModel.objects.filter(top__id=self.kwargs['pk']).order_by('date')
         context["sub_detail_list"] = SubDetailListModel.objects.filter(detail__top=self.kwargs['pk']).order_by('detail__date')
         return context
