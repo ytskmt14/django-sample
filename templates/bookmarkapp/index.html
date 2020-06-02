@@ -14,13 +14,29 @@
 {### ページの内容を定義 ###}
 {### semantic uiを使って組むなら公式ページへ ###}
 {### https://semantic-ui.com/introduction/getting-started.html ###}
+
 {% block content %}
+<!-- メッセージ -->
+{% if messages %}
+    {% for message in messages %}
+        {% if message.tags == "success" %}
+            <div class="ui positive message">
+                <i class="close icon"></i>
+                <div class="header">
+                    {{ message }}
+                </div>
+                <p>次の旅の予定を立てましょう！</p>
+            </div>
+        {% endif %}
+    {% endfor %}
+{% endif %}
+
 <div class="ui grid">
     <div class="fourteen wide column">
         <h2 class="ui header">旅のしおり一覧</h2>
     </div>
     <div class="two wide column">
-        <a href="#" class="ui blue button" role="button">追加</a>
+        <a href="{% url 'bookmarkapp:top_create' %}" class="ui blue button" role="button">追加</a>
     </div>
 </div>
 
@@ -42,6 +58,8 @@
                         {{ item.memo }}
                     </div>
                 </h4>
+                <a href="{% url 'bookmarkapp:top_update' item.pk %}" class="ui green button mini" role="button">編集</a>
+                <a href="{% url 'bookmarkapp:top_delete' item.pk %}" class="ui orange button mini" role="button">削除</a>
             </div>
         </div>
     </div>

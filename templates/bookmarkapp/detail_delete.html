@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block title %}旅のしおり詳細削除{% endblock %}
+
+{% block extra_css %}
+{% endblock  %}
+
+{% block content %}
+<!-- パンくずリスト -->
+<div class="ui breadcrumb">
+    <a class="section" href="{% url 'bookmarkapp:index' %}">旅行のしおり一覧</a>
+    <div class="divider"> > </div>
+    <a class="section" href="{% url 'bookmarkapp:detail' detail_list.top.id %}">{{ detail_list.top.date_from }} ~
+        {{ detail_list.top.date_to }} {{ detail_list.top.title }}</a>
+    <div class="divider"> > </div>
+    <div class="active section">
+        旅のしおり詳細削除
+    </div>
+</div>
+
+<!-- メイン処理 -->
+<div style="margin-top: 40px;">
+    <form action="" method="POST">{% csrf_token %}
+        <input class="ui red button" type="submit" value="削除します" onClick="alert('本当に削除しますか？');">
+    </form>
+</div>
+{% endblock %}
+
+{### ページごとのjsを定義 ###}
+{% block extra_js %}
+{% endblock  %}

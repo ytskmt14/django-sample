@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block title %}旅のしおり詳細修正{% endblock %}
+
+{% block extra_css %}
+{% endblock  %}
+
+{% block content %}
+<!-- パンくずリスト -->
+<div class="ui breadcrumb">
+    <a class="section" href="{% url 'bookmarkapp:index' %}">旅行のしおり一覧</a>
+    <div class="divider"> > </div>
+    <a class="section" href="{% url 'bookmarkapp:detail' detail_list.top.id %}">{{ detail_list.top.date_from }} ~
+        {{ detail_list.top.date_to }} {{ detail_list.top.title }}</a>
+    <div class="divider"> > </div>
+    <div class="active section">
+        旅のしおり修正
+    </div>
+</div>
+
+<!-- メッセージ -->
+{% if messages %}
+{% for message in messages %}
+{% if message.tags == "error" %}
+<div class="ui negative message">
+    <i class="close icon"></i>
+    <div class="header">
+        {{ message }}
+    </div>
+    <p>正しい値を入力してください。</p>
+</div>
+{% endif %}
+{% endfor %}
+{% endif %}
+
+<!-- メイン処理 -->
+<div style="margin-top: 40px;">
+    <form action="" method="POST">{% csrf_token %}
+        <p>日付：<input type="date" name="date" value="{{ detail_list.top.date_from|date:"Y-m-d"}}" required></p>
+        <p>{{ form.main_content.label }}：{{ form.main_content }}</p>
+        <input id="input_foreign_key" type="hidden" name="top" value=""></p>
+
+        <input type="submit" value="作成する">
+    </form>
+</div>
+{% endblock %}
+
+{### ページごとのjsを定義 ###}
+{% block extra_js %}
+<script type="text/javascript">
+    // ID名「input_foreign_key」のvalueに外部キーを代入
+    document.getElementById('input_foreign_key').value = {{ detail_list.top.id }};
+</script>
+{% endblock  %}

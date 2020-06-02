@@ -57,6 +57,14 @@
         .dropdown();
     });
   </script>
+  <script>
+    // notificationを×押下で閉じられるように。
+    for (const element of document.querySelectorAll('.message > .close')) {
+        element.addEventListener('click', e => {
+            e.target.parentElement.classList.add('is_hidden');
+        });
+    }
+</script>
   {### 各ページごとにjavascriptを定義する場合もあるため、blockを用意 ###}
   {% block extra_js %}{% endblock  %}
 </body>
