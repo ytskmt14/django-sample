@@ -37,8 +37,8 @@
     <form action="" method="POST">{% csrf_token %}
         <p>{{ form.title.label }}：{{ form.title }}</p>
         <p>{{ form.memo.label }}：{{ form.memo }}</p>
-        <p>{{ form.date_from.label }}：{{ form.date_from }}</p>
-        <p>{{ form.date_to.label }}：{{ form.date_to }}</p>
+        <p>出発日：<input type="date" name="date_from" value="{{ top_info.date_from|date:"Y-m-d"}}" required></p>
+        <p>帰宅日：<input type="date" name="date_to" value="{{ top_info.date_to|date:"Y-m-d"}}" required></p>
 
         <input type="submit" value="修正する">
     </form>
