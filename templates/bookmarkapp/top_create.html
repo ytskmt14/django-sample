@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block title %}旅のしおり削除{% endblock %}
+
+{% block extra_css %}
+{% endblock  %}
+
+{% block content %}
+<!-- パンくずリスト -->
+<div class="ui breadcrumb">
+    <a class="section" href="{% url 'bookmarkapp:index' %}">旅行のしおり一覧</a>
+    <div class="divider"> > </div>
+    <div class="active section">
+        旅のしおり作成
+    </div>
+</div>
+
+<!-- メッセージ -->
+{% if messages %}
+    {% for message in messages %}
+        {% if message.tags == "error" %}
+            <div class="ui negative message">
+                <i class="close icon"></i>
+                <div class="header">
+                    {{ message }}
+                </div>
+                <p>正しい値を入力してください。</p>
+            </div>
+        {% endif %}
+    {% endfor %}
+{% endif %}
+
+<!-- メイン処理 -->
+<div style="margin-top: 40px;">
+    <form action="" method="POST">{% csrf_token %}
+        <p>{{ form.title.label }}：{{ form.title }}</p>
+        <p>{{ form.memo.label }}：{{ form.memo }}</p>
+        <p>出発日：<input type="date" name="date_from"></p>
+        <p>帰宅日：<input type="date" name="date_to"></p>
+
+        <input type="submit" value="作成する">
+    </form>
+</div>
+{% endblock %}
+
+{### ページごとのjsを定義 ###}
+{% block extra_js %}
+{% endblock  %}

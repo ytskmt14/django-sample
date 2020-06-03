@@ -1,0 +1,71 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block title %}旅のしおり副詳細作成{% endblock %}
+
+{% block extra_css %}
+{% endblock  %}
+
+{% block content %}
+<!-- パンくずリスト -->
+<div class="ui breadcrumb">
+    <a class="section" href="{% url 'bookmarkapp:index' %}">旅行のしおり一覧</a>
+    <div class="divider"> > </div>
+    <a class="section" href="{% url 'bookmarkapp:detail' top_info.0.id %}">{{ top_info.0.date_from }} ~
+        {{ top_info.0.date_to }} {{ top_info.0.title }}</a>
+    <div class="divider"> > </div>
+    <div class="active section">
+        旅のしおり副詳細作成
+    </div>
+</div>
+
+<!-- メッセージ -->
+{% if messages %}
+    {% for message in messages %}
+        {% if message.tags == "error" %}
+            <div class="ui negative message">
+                <i class="close icon"></i>
+                <div class="header">
+                    {{ message }}
+                </div>
+                <p>正しい値を入力してください。</p>
+                <p>ＵＲＬは正しいですか？</p>
+            </div>
+        {% endif %}
+    {% endfor %}
+{% endif %}
+
+<!-- メイン処理 -->
+<div style="margin-top: 40px;">
+    <form action="" method="POST">{% csrf_token %}
+        <!-- <p>{{ form.time.label }}：{{ form.time }}</p> -->
+        <p>時間：<input type="time" name="time" required></p>
+        <p>{{ form.main_content.label }}：{{ form.main_content }}</p>
+        <p>{{ form.hp_url.label }}：{{ form.hp_url }}</p>
+        <p>{{ form.map_url.label }}：{{ form.map_url }}</p>
+        <p>{{ form.root_url.label }}：{{ form.root_url }}</p>
+        <p>{{ form.content1.label }}：{{ form.content1 }}</p>
+        <p>{{ form.content2.label }}：{{ form.content2 }}</p>
+        <p>{{ form.content3.label }}：{{ form.content3 }}</p>
+        <p>{{ form.content4.label }}：{{ form.content4 }}</p>
+        <p>{{ form.content5.label }}：{{ form.content5 }}</p>
+        <p>{{ form.content6.label }}：{{ form.content6 }}</p>
+        <p>{{ form.content7.label }}：{{ form.content7 }}</p>
+        <p>{{ form.content8.label }}：{{ form.content8 }}</p>
+        <p>{{ form.content9.label }}：{{ form.content9 }}</p>
+        <p>{{ form.content10.label }}：{{ form.content10 }}</p>
+        <input id="input_foreign_key" type="hidden" name="detail" value=""></p>
+
+        <input type="submit" value="作成する">
+    </form>
+</div>
+{% endblock %}
+
+{### ページごとのjsを定義 ###}
+{% block extra_js %}
+<script type="text/javascript">
+    // ID名「input_foreign_key」のvalueに外部キーを代入
+    document.getElementById('input_foreign_key').value = {{ detail_list.0.detail_id }};
+</script>
+{% endblock  %}

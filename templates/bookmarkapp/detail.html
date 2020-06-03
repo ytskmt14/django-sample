@@ -17,93 +17,142 @@
 <div class="ui breadcrumb">
     <a class="section" href="{% url 'bookmarkapp:index' %}">旅行のしおり一覧</a>
     <div class="divider"> > </div>
-    <div class="active section">2020/01/01 ~ 2020/01/05 インド旅行</div>
+    <div class="active section">
+        {{ top_info.date_from }} ~ {{ top_info.date_to }}  {{ top_info.title }}
+    </div>
 </div>
 <!-- タイトル -->
 <div class="ui grid" style="margin-top:30px;">
     <div class="thirteen wide column">
         <h2 class="ui header">
-            {## {% object.date_from %} ~ {% object.date_to %}  {% object.title %} ##}
-            2020/01/01 ~ 2020/01/05 インド旅行
+            {{ top_info.date_from }} ~ {{ top_info.date_to }}  {{ top_info.title }}
         </h2>
     </div>
     <div class="three wide column">
-        <a href="#" class="ui green button" role="button">編集</a>
+        <a href="{% url 'bookmarkapp:detail_create' top_info.id %}" class="ui blue button" role="button">追加</a>
         <a href="{% url 'bookmarkapp:index' %}" class="ui black button" role="button">戻る</a>
     </div>
 </div>
+
+<!-- メッセージ -->
+{% if messages %}
+    {% for message in messages %}
+        {% if message.tags == "success" %}
+            <div class="ui positive message">
+                <i class="close icon"></i>
+                <div class="header">
+                    {{ message }}
+                </div>
+                <p>次の旅の予定を立てましょう！</p>
+            </div>
+        {% endif %}
+    {% endfor %}
+{% endif %}
+
 <!-- 日程 -->
 <div class="ui styled accordion" style="margin-top: 40px;">
-    {## {% for item in sub_object %} ##}
-    {% for _ in ''|center:3 %}
-    <div class="title">
-        <i class="calendar check outline icon"></i>
-        {## {% item.date %}　{% item.sub_title %} ##}
-        2020/01/0{{ forloop.counter }}　行きたい土地{{ forloop.counter }}に行く！
-        <!-- HP、地図、経路案内のリンクを設定していたらボタンを配置する -->
-    </div>
-    <div class="content">
-        {## {% for sub_item in sub_object %} ##}
-        {% for _ in ''|center:4 %}
-        <ul>
-            <!-- ユーザーが重要度を設定することができ（1：最重要、2：重要、3：普通）、それに応じてフォントを変更 -->
-            {## {% if sub_item.importance == 1 %}##}
-            {% if forloop.counter == 1 %}
-            <li class="sub_detail" style="color: red; font-weight: bold;">
-                {## {% elif sub_item.importance == 2 %}##}
-                {% elif forloop.counter == 2 %}
-            <li class="sub_detail" style="font-weight: bold;">
-                {% else %}
-            <li class="sub_detail">
-                {% endif %}
-                {## {% item.estimated_time %}　{% item.content %} ##}
-                1{{ forloop.counter }}:00　有名なマーケット{{ forloop.counter }}で買い物！
-            </li>
-        </ul>
-        {% endfor %}
-    </div>
+    <!-- Detailの数だけループ -->
+    {% for detail in detail_list %}
+        <div class="title">
+            <i class="calendar check outline icon"></i>
+            {{ detail.date }}　{{ detail.main_content }}
+            <a href="{% url 'bookmarkapp:sub_detail_create' top_info.id detail.pk %}" class="ui blue button mini" role="button">
+                追加
+            </a>
+            <a href="{% url 'bookmarkapp:detail_update' top_info.id detail.pk  %}" class="ui green button mini" role="button">
+                編集
+            </a>
+            <a href="{% url 'bookmarkapp:detail_delete' top_info.id detail.pk %}" class="ui orange button mini" role="button">
+                削除
+            </a>
+        </div>
+        <div class="content">
+            <ul>
+                {% for sub_detail in sub_detail_list%}
+                    {% if sub_detail.detail.date == detail.date %}
+                        <li class="sub_detail{{ forloop.counter }}">
+                            {{ sub_detail.time }}　{{ sub_detail.main_content }}
+                        </li>
+                    {% endif %}
+                {% endfor %}
+            </ul>
+        </div>
     {% endfor %}
-    <!-- モーダル表示部分 -->
-    <div class="ui modal">
+</div>
+<!-- モーダル表示部分 -->
+{% for sub_detail in sub_detail_list %}
+    <div class="ui modal modal{{ forloop.counter }}">
         <i class="close icon"></i>
         <div class="header">
-            {## {% sub_item.content %}##}
-            11:00　有名なマーケットで買い物！
-            {## {% if sub_item.hp_url is not None %} ##}
-            {## <a href="sub_object.hp_url" class="mini ui blue button position" role="button" style="position: absolute; right: 160px;"> ##}
-            <a href=" #" class="mini ui blue button position" id="detail_button" role="button"
-                style="position: absolute; right: 160px;">
+            {{ sub_detail.time }} {{ sub_detail.main_content }}
+            {% if sub_detail.hp_url != ""  %}
+                <a href="{{ sub_detail.hp_url }}" class="mini ui blue button position" role="button"
+                    style="position: absolute; right: 300px;" target="_blank">
                 HP
-            </a>
-            {## {% endif %} ##}
-            {## {% if sub_item.map_url is not None %} ##}
-            {## <a href="sub_object.map_url" class="mini ui teal button" id="detail_button" role="button" style="position: absolute; right: 90px;"> </a>##}
-            <a href="#" class="mini ui teal button" id="detail_button" role="button"
+                </a>
+            {% endif %}
+            {% if sub_detail.map_url != ""  %}
+                <a href="{{ sub_detail.map_url }}" class="mini ui teal button" id="detail_button" role="button"
+                    style="position: absolute; right: 230px;" target="_blank">
+                    地図
+                </a>
+            {% endif %}
+            {% if sub_detail.root_url != ""  %}
+                <a href="{{ sub_detail.root_url }}" class="mini ui grey button" id="detail_button" role="button"
+                    style="position: absolute; right: 160px;" target="_blank">
+                    経路
+                </a>
+            {% endif %}
+            <a href="{% url 'bookmarkapp:sub_detail_update' top_info.id sub_detail.pk %}" class="mini ui green button" role="button" 
                 style="position: absolute; right: 90px;">
-                地図
+                編集
             </a>
-            {## {% endif %} ##}
-            {## {% if sub_item.root_url is not None %} ##}
-            {## <a href="sub_object.root_url" class="mini ui grey button" id="detail_button" role="button" style="position: absolute; right: 20px;"> </a>##}
-            <a href="#" class="mini ui grey button" id="detail_button" role="button"
+            <a href="{% url 'bookmarkapp:sub_detail_delete' top_info.id sub_detail.pk %}" class="mini ui orange button" role="button" 
                 style="position: absolute; right: 20px;">
-                経路
+                削除
             </a>
-            {## {% endif %} ##}
         </div>
         <div class="image content">
             <div class="ui small image">
                 <img src="https://placehold.jp/200x200.png">
             </div>
             <div class="description">
-                <li class="sub_content">どうしても買いたいお土産があるので買う。</li>
-                <li class="sub_content">予算は3000円</li>
-                <li class="sub_content">値下げ交渉をする。</li>
-                <li class="sub_content">もっと値下げ交渉をする。</li>
+                {% if sub_detail.content1 == "" %}
+                    まだやりたいことが登録されていません。
+                {% else %}
+                    <li class="sub_content">{{ sub_detail.content1 }}</li>
+                    {% if sub_detail.content2 != "" %}
+                        <li class="sub_content">{{ sub_detail.content2 }}</li>
+                    {% endif %}
+                    {% if sub_detail.content3 != "" %}
+                        <li class="sub_content">{{ sub_detail.content3 }}</li>
+                    {% endif %}
+                    {% if sub_detail.content4 != "" %}
+                        <li class="sub_content">{{ sub_detail.content4 }}</li>
+                    {% endif %}
+                    {% if sub_detail.content5 != "" %}
+                        <li class="sub_content">{{ sub_detail.content5 }}</li>
+                    {% endif %}
+                    {% if sub_detail.content6 != "" %}
+                        <li class="sub_content">{{ sub_detail.content6 }}</li>
+                    {% endif %}
+                    {% if sub_detail.content7 != "" %}
+                        <li class="sub_content">{{ sub_detail.content7 }}</li>
+                    {% endif %}
+                    {% if sub_detail.content8 != "" %}
+                        <li class="sub_content">{{ sub_detail.content8 }}</li>
+                    {% endif %}
+                    {% if sub_detail.content9 != "" %}
+                        <li class="sub_content">{{ sub_detail.content9 }}</li>
+                    {% endif %}
+                    {% if sub_detail.content10 != "" %}
+                        <li class="sub_content">{{ sub_detail.content10 }}</li>
+                    {% endif %}
+                {% endif %}
             </div>
         </div>
     </div>
-</div>
+{% endfor %}
 {% endblock %}
 
 {### ページごとのjsを定義 ###}
@@ -111,9 +160,11 @@
 <script type="text/javascript">
 
     $(".ui.accordion").accordion();
-
-    $(".sub_detail").click(function () {
-        $('.ui.modal').modal('show');
+    {% for _ in sub_detail_list %}
+    $(".sub_detail{{ forloop.counter }}").click(function () {
+        $('.ui.modal{{ forloop.counter }}').modal('show');
     });
+    {% endfor %}
+
 </script>
 {% endblock  %}
