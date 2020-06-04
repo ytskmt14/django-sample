@@ -1,4 +1,5 @@
 from django.db import models
+from stdimage.models import StdImageField  #追
 
 class TopListModel(models.Model):
     id = models.AutoField(primary_key=True)
@@ -6,7 +7,9 @@ class TopListModel(models.Model):
     memo = models.CharField(max_length=100)
     date_from = models.DateField(auto_now=False)
     date_to = models.DateField(auto_now=False)
-    images = models.ImageField(upload_to='', blank=True, null=True)
+    images = StdImageField(upload_to='', blank=True, null=True, variations={
+        'medium': (200, 200, True),
+    })
 
     def __str__(self):
         return self.title
@@ -35,7 +38,9 @@ class SubDetailListModel(models.Model):
     sub_detail_id = models.AutoField(primary_key=True)
     time = models.TimeField(auto_now=False)
     main_content = models.CharField(max_length=100)
-    images = models.ImageField(upload_to='', blank=True, null=True)
+    images = StdImageField(upload_to='', blank=True, null=True, variations={
+        'medium': (200, 200, True),
+    })
     hp_url = models.CharField(max_length=200, null=True, blank=True)
     map_url = models.CharField(max_length=200, null=True, blank=True)
     root_url = models.CharField(max_length=200, null=True, blank=True)
