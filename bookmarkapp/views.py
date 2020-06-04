@@ -114,6 +114,7 @@ class TopUpdateView(UpdateView):
     model = TopListModel
     form_class = TopForm
     success_url = reverse_lazy("bookmarkapp:index")
+    context_object_name = 'top_info'
 
     # メッセージの表示
     def form_valid(self, form):
