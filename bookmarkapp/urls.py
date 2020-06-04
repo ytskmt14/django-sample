@@ -1,4 +1,8 @@
 from django.urls import path
+from django.contrib.staticfiles.urls import static
+import sys
+sys.path.append('../')
+from config import settings
 
 from . import views
 
@@ -16,3 +20,5 @@ urlpatterns = [
   path('travels/<int:top_pk>/plans/<int:pk>/schedules/edit', views.sub_detail_update, name='sub_detail_update'),
   path('travels/<int:top_pk>/plans/<int:pk>/schedules/delete', views.sub_detail_delete, name='sub_detail_delete'),
 ]
+
+urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -2,7 +2,7 @@
 
 {% load static %}
 
-{% block title %}旅のしおり削除{% endblock %}
+{% block title %}旅のしおり作成{% endblock %}
 
 {% block extra_css %}
 {% endblock  %}
@@ -34,13 +34,14 @@
 
 <!-- メイン処理 -->
 <div style="margin-top: 40px;">
-    <form action="" method="POST">{% csrf_token %}
+    <form action="" method="POST" enctype="multipart/form-data">{% csrf_token %}
         <p>{{ form.title.label }}：{{ form.title }}</p>
         <p>{{ form.memo.label }}：{{ form.memo }}</p>
         <p>出発日：<input type="date" name="date_from"></p>
         <p>帰宅日：<input type="date" name="date_to"></p>
+        <p>{{ form.images.label }}：{{ form.images }}</p>
 
-        <input type="submit" value="作成する">
+        <button class="ui blue button mini" type="submit">保存</button>
     </form>
 </div>
 {% endblock %}

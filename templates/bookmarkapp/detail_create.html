@@ -32,6 +32,14 @@
                 </div>
                 <p>正しい値を入力してください。</p>
             </div>
+        {% elif message.tags == "success" %}
+            <div class="ui positive message">
+                <i class="close icon"></i>
+                <div class="header">
+                    {{ message }}
+                </div>
+                <p>登録されました。</p>
+            </div>
         {% endif %}
     {% endfor %}
 {% endif %}
@@ -44,7 +52,8 @@
         <p>{{ form.main_content.label }}：{{ form.main_content }}</p>
         <input id="input_foreign_key" type="hidden" name="top" value="{{ top_info.0.id }};"></p>
 
-        <input type="submit" value="作成する">
+        <button class="ui blue button mini" type="submit">保存</button>
+        <button class="ui blue button mini" type="submit" name="save_and_add">保存してもう一つ追加</button>
     </form>
 </div>
 {% endblock %}

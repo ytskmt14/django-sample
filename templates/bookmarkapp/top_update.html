@@ -34,13 +34,14 @@
 
 <!-- メイン処理 -->
 <div style="margin-top: 40px;">
-    <form action="" method="POST">{% csrf_token %}
+    <form action="" method="POST" enctype="multipart/form-data">{% csrf_token %}
         <p>{{ form.title.label }}：{{ form.title }}</p>
         <p>{{ form.memo.label }}：{{ form.memo }}</p>
         <p>出発日：<input type="date" name="date_from" value="{{ top_info.date_from|date:"Y-m-d"}}" required></p>
         <p>帰宅日：<input type="date" name="date_to" value="{{ top_info.date_to|date:"Y-m-d"}}" required></p>
+        <p>{{ form.images.label }}：{{ form.images }}</p>
 
-        <input type="submit" value="修正する">
+        <button class="ui blue button mini" type="submit">保存</button>
     </form>
 </div>
 {% endblock %}

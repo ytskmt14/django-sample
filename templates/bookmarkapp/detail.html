@@ -113,9 +113,11 @@
             </a>
         </div>
         <div class="image content">
-            <div class="ui small image">
-                <img src="https://placehold.jp/200x200.png">
-            </div>
+            {% if sub_detail.images.url != "" %}
+                <div class="ui image">
+                    <img src="{{ sub_detail.images.url }}" width="200" height="200">
+                </div>
+            {% endif %}
             <div class="description">
                 {% if sub_detail.content1 == "" %}
                     まだやりたいことが登録されていません。

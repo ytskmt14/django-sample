@@ -69,6 +69,11 @@ class DetailCreateView(CreateView):
         # バリデーションに成功した時
         self.object = post = form.save()
         messages.success(self.request, f'旅のしおり詳細を作成しました。  日付:{post.date},　やること:{post.main_content}')
+
+         # 保存してもう一つ追加ボタンのとき
+        if 'save_and_add' in self.request.POST:
+            return redirect(reverse("bookmarkapp:detail_create", kwargs={"pk": self.kwargs['pk']}))
+
         return redirect(self.get_success_url())
 
     def form_invalid(self, form):
@@ -99,6 +104,11 @@ class SubDetailCreateView(CreateView):
         # バリデーションに成功した時
         self.object = post = form.save()
         messages.success(self.request, f'旅のしおり副詳細を修正しました。 日付:{post.detail.date},　時間:{post.time},　やること:{post.main_content}')
+        
+                 # 保存してもう一つ追加ボタンのとき
+        if 'save_and_add' in self.request.POST:
+            return redirect(reverse("bookmarkapp:sub_detail_create", kwargs={"top_pk": self.kwargs['top_pk'], "detail_pk": self.kwargs['detail_pk']}))
+
         return redirect(self.get_success_url())
 
     def form_invalid(self, form):

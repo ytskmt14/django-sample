@@ -38,10 +38,11 @@
 
 <!-- メイン処理 -->
 <div style="margin-top: 40px;">
-    <form action="" method="POST">{% csrf_token %}
+    <form action="" method="POST" enctype="multipart/form-data">{% csrf_token %}
         <!-- <p>{{ form.time.label }}：{{ form.time }}</p> -->
         <p>時間：<input type="time" name="time" value="{{ sub_detail_list.time|date:"H:i:s"}}" required></p>
         <p>{{ form.main_content.label }}：{{ form.main_content }}</p>
+        <p>{{ form.images.label }}：{{ form.images }}</p>
         <p>{{ form.hp_url.label }}：{{ form.hp_url }}</p>
         <p>{{ form.map_url.label }}：{{ form.map_url }}</p>
         <p>{{ form.root_url.label }}：{{ form.root_url }}</p>
@@ -57,7 +58,7 @@
         <p>{{ form.content10.label }}：{{ form.content10 }}</p>
         <input id="input_foreign_key" type="hidden" name="detail" value=""></p>
 
-        <input type="submit" value="作成する">
+        <button class="ui blue button mini" type="submit">保存</button>
     </form>
 </div>
 {% endblock %}

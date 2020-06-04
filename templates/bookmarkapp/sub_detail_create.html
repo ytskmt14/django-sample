@@ -32,16 +32,24 @@
                 <p>正しい値を入力してください。</p>
                 <p>ＵＲＬは正しいですか？</p>
             </div>
+        {% elif message.tags == "success" %}
+            <div class="ui positive message">
+                <i class="close icon"></i>
+                <div class="header">
+                    {{ message }}
+                </div>
+                <p>登録されました。</p>
+            </div>
         {% endif %}
     {% endfor %}
 {% endif %}
 
 <!-- メイン処理 -->
 <div style="margin-top: 40px;">
-    <form action="" method="POST">{% csrf_token %}
-        <!-- <p>{{ form.time.label }}：{{ form.time }}</p> -->
+    <form action="" method="POST" enctype="multipart/form-data">{% csrf_token %}
         <p>時間：<input type="time" name="time" required></p>
         <p>{{ form.main_content.label }}：{{ form.main_content }}</p>
+        <p>{{ form.images.label }}：{{ form.images }}</p>
         <p>{{ form.hp_url.label }}：{{ form.hp_url }}</p>
         <p>{{ form.map_url.label }}：{{ form.map_url }}</p>
         <p>{{ form.root_url.label }}：{{ form.root_url }}</p>
@@ -57,8 +65,8 @@
         <p>{{ form.content10.label }}：{{ form.content10 }}</p>
         <input id="input_foreign_key" type="hidden" name="detail" value=""></p>
 
-        <input type="submit" value="作成する">
-    </form>
+        <button class="ui blue button mini" type="submit">保存</button>
+        <button class="ui blue button mini" type="submit" name="save_and_add">保存してもう一つ追加</button>    </form>
 </div>
 {% endblock %}
 
