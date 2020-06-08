@@ -19,33 +19,87 @@
 
 <!-- メッセージ -->
 {% if messages %}
-    {% for message in messages %}
-        {% if message.tags == "error" %}
-            <div class="ui negative message">
-                <i class="close icon"></i>
-                <div class="header">
-                    {{ message }}
-                </div>
-                <p>正しい値を入力してください。</p>
-            </div>
-        {% endif %}
-    {% endfor %}
+{% for message in messages %}
+{% if message.tags == "error" %}
+<div class="ui negative message">
+    <i class="close icon"></i>
+    <div class="header">
+        {{ message }}
+    </div>
+    <p>正しい値を入力してください。</p>
+</div>
+{% endif %}
+{% endfor %}
 {% endif %}
 
 <!-- メイン処理 -->
-<div style="margin-top: 40px;">
-    <form action="" method="POST" enctype="multipart/form-data">{% csrf_token %}
-        <p>{{ form.title.label }}：{{ form.title }}</p>
-        <p>{{ form.memo.label }}：{{ form.memo }}</p>
-        <p>出発日：<input type="date" name="date_from"></p>
-        <p>帰宅日：<input type="date" name="date_to"></p>
-        <p>{{ form.images.label }}：{{ form.images }}</p>
-
-        <button class="ui blue button mini" type="submit">保存</button>
-    </form>
+<h3>新しい旅行の予定を立てよう！</h3>
+<hr color="#C0C0C0">
+<div class="ui steps">
+    <div class="active step">
+        <i class="plane icon"></i>
+        <div class="content">
+            <div class="title">Travel Plan</div>
+            <div class="description">いつ・どこに行く？</div>
+        </div>
+    </div>
+    <div class="disabled step">
+        <i class="map icon"></i>
+        <div class="content">
+            <div class="title">Daily Plan</div>
+            <div class="description">その日何する？</div>
+        </div>
+    </div>
+    <div class="disabled step">
+        <i class="handshake icon"></i>
+        <div class="content">
+            <div class="title">Confirm Plan</div>
+            <div class="description">これでOK？</div>
+        </div>
+    </div>
 </div>
+<form action="" method="POST" enctype="multipart/form-data">{% csrf_token %}
+    <h4>旅行のタイトルは？</h4>
+    <div class="ui input">
+        <input type="text" id="title" size="80" placeholder="家族みんなで温泉旅行！" value="" name="title" required>
+    </div>
+    <h4>どんな旅行？</h4>
+    <div class="ui input">
+        <input type="text" id="memo" size="80" placeholder="年に一度の恒例行事" value="" name="memo">
+    </div>
+    <div class="ui form" style="margin-top:20px;">
+        <div class="four fields">
+            <div class="field">
+                <h4>いつから？</h4>
+                <div class="ui input">
+                    <input type="date" value="{{form.date_from.value}}" name="date_from" required>
+                </div>
+            </div>
+            <div class="field">
+                <h4>いつまで？</h4>
+                <div class="ui input">
+                    <input type="date" value="{{form.date_to.value}}" name="date_to" required>
+                </div>
+            </div>
+        </div>
+    </div>
+    <br>
+    {% if confirmed != null %}
+        <button class="ui blue button mini" type="submit" name="next" value="top_confirm">確認画面へ</button>
+    {% else %}
+        <button class="ui blue button mini" type="submit" name="next" value="create_detail">次へ</button>
+    {% endif %}
+</form>
 {% endblock %}
 
 {### ページごとのjsを定義 ###}
 {% block extra_js %}
+<script type="text/javascript">
+    {% if form.title.value != None %}
+    document.getElementById('title').value = "{{ form.title.value }}";
+    {% endif %}
+    {% if form.memo.value != None %}
+    document.getElementById('memo').value = "{{ form.memo.value }}";
+    {% endif %}
+</script>
 {% endblock  %}

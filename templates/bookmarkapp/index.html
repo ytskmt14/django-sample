@@ -50,9 +50,9 @@
             
             <a href="{% url 'bookmarkapp:detail' item.pk %}" class="image hover-darken">
                 {% if item.images.url != "" %}
-                    <img src="{{ item.images.medium.url }}"/>
+                    <img src="{{ item.images.medium.url }}">
                 {% else %}
-                    <div style="width: 293px; height: 293px; background-color: #C0C0C0;"></div>
+                <img src="http://placehold.it/200x200/?text=未設定">
                 {% endif %}
             </a>
             <div class="content">

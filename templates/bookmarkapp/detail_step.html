@@ -1,0 +1,145 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block title %}旅のしおり詳細作成{% endblock %}
+
+{% block extra_css %}
+{% endblock  %}
+
+{% block content %}
+<!-- パンくずリスト -->
+<div class="ui breadcrumb">
+    <a class="section" href="{% url 'bookmarkapp:index' %}">旅行のしおり一覧</a>
+    <div class="divider"> > </div>
+    <div class="active section">
+        旅のしおり作成
+    </div>
+</div>
+
+<!-- メッセージ -->
+{% if messages %}
+{% for message in messages %}
+{% if message.tags == "error" %}
+<div class="ui negative message">
+    <i class="close icon"></i>
+    <div class="header">
+        {{ message }}
+    </div>
+    <p>正しい値を入力してください。</p>
+</div>
+{% elif message.tags == "success" %}
+<div class="ui positive message">
+    <i class="close icon"></i>
+    <div class="header">
+        {{ message }}
+    </div>
+</div>
+{% endif %}
+{% endfor %}
+{% endif %}
+
+<!-- メイン処理 -->
+<h3>日付別の概要を作ろう！</h3>
+<hr color="#C0C0C0">
+<div class="ui steps">
+    <div class="step">
+        <i class="plane icon"></i>
+        <div class="content">
+            <div class="title">Travel Plan</div>
+            <div class="description">いつ・どこに行く？</div>
+        </div>
+    </div>
+    <div class="active step">
+        <i class="map icon"></i>
+        <div class="content">
+            <div class="title">Daily Plan</div>
+            <div class="description">その日何する？</div>
+        </div>
+    </div>
+    <div class="disabled step">
+        <i class="handshake icon"></i>
+        <div class="content">
+            <div class="title">Confirm Plan</div>
+            <div class="description">これでOK？</div>
+        </div>
+    </div>
+</div>
+<h4>旅行予定期間</h4>
+{{form.date_from.value}}　～　{{form.date_to.value}}
+{% if detail_work != null %}
+<table class="ui compact table">
+    <thead>
+        <tr>
+            <th>日付</th>
+            <th>やること</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for detail in detail_work %}
+        {% if selected_detail.0.id == detail.id %}
+        <tr style="width:90px; background-color: yellow;">
+        {% else %}
+        <tr>
+        {% endif %}
+            <td style="width:135px;">{{ detail.date }}</td>
+            <td>{{ detail.main_content }}</td>
+            <td style="width:90px;">
+                <form class="ui form" action="" method="POST">{% csrf_token %}
+                    <input type="hidden" name="detail_id" value={{detail.id}}></p>
+                    <button class="ui gray button mini" type="submit" name="next" value="detail_edit"
+                        style="vertical-align: middle;">編集</button>
+                </form>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endif %}
+<hr color="#C0C0C0">
+<form action="" method="POST" enctype="multipart/form-data">{% csrf_token %}
+    <h4>何日に？</h4>
+    <div class="ui input">
+        <input type="date" id="date" name="date" value="{{form.date_from.value}}">
+    </div>
+    <h4>なにする？</h4>
+    <div class="ui input">
+        <input type="text" id="main_content" size="80" placeholder="有名な温泉巡り" name="main_content">
+    </div>
+    <br>
+    <br>
+    {% if selected_detail == null %}
+    {% if top_to_detail != null %}
+    <button class="ui gray button mini" type="submit" name="next" value="back_top">戻る</button>
+    {% endif %}
+    <button class="ui blue button mini" id="save_and_add" type="submit" name="next" value="save_and_add">追加</button>
+    <button class="ui blue button mini" type="submit" name="next" value="detail_confirm">確認画面へ</button>
+    {% else %}
+    <!-- 更新用id -->
+    <input type="hidden" name="detail_id" value={{selected_detail.0.id}}></p>
+    <button class="ui blue button mini" id="detail_update" type="submit" name="next" value="detail_update">修正</button>
+    <button class="ui red button mini" type="submit" name="next" value="detail_delete" onclick="return confirm('本当に削除しますか？')">削除</button>
+    <button class="ui blue button mini" type="submit" name="next" value="detail_confirm">確認画面へ</button>
+    {% endif %}
+</form>
+{% endblock %}
+
+{### ページごとのjsを定義 ###}
+{% block extra_js %}
+<script type="text/javascript">
+    // 戻るボタン押下時以外は必須項目に変更
+    $('#save_and_add, #detail_update').hover(() => {
+        document.getElementById("date").required = true;
+        document.getElementById("main_content").required = true;
+    }, function () {
+        document.getElementById("date").required = false;
+        document.getElementById("main_content").required = false;
+    });
+
+    {% if selected_detail != null %}
+        document.getElementById('date').value = "{{ selected_detail.0.date|date:"Y-m-d" }}";
+        document.getElementById('main_content').value = "{{ selected_detail.0.main_content }}";
+    {% endif %}
+</script>
+{% endblock  %}

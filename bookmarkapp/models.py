@@ -1,5 +1,25 @@
 from django.db import models
-from stdimage.models import StdImageField  #追
+from stdimage.models import StdImageField
+
+class TopListManager(models.Manager):
+    def create_top_list(self, title, memo, date_from, date_to, images=None):
+        top_list = self.model(
+            title=title,
+            memo=memo,
+            date_from=date_from,
+            date_to=date_to,
+            images=images,
+        )
+        top_list.save()
+
+class DetailListManager(models.Manager):
+    def create_detail_list(self, date, main_content, top_id):
+        detail_list = self.model(
+            date=date,
+            main_content=main_content,
+        )
+        detail_list.top = TopListModel.objects.get(id=top_id)
+        detail_list.save()
 
 class TopListModel(models.Model):
     id = models.AutoField(primary_key=True)
@@ -10,6 +30,8 @@ class TopListModel(models.Model):
     images = StdImageField(upload_to='', blank=True, null=True, variations={
         'medium': (200, 200, True),
     })
+
+    objects = TopListManager()
 
     def __str__(self):
         return self.title
@@ -31,6 +53,8 @@ class DetailListModel(models.Model):
     main_content = models.CharField(max_length=100)
     top = models.ForeignKey(TopListModel, on_delete=models.CASCADE)
 
+    objects = DetailListManager()
+    
     def __str__(self):
         return self.main_content
 
@@ -70,3 +94,7 @@ class SubDetailListModel(models.Model):
 
         super(SubDetailListModel, self).save(*args, **kwargs)
 
+class DetailWork(models.Model):
+    id = models.AutoField(primary_key=True)
+    date = models.DateField(auto_now=False)
+    main_content = models.CharField(max_length=100)

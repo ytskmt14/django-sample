@@ -18,7 +18,6 @@
     <div class="active section">
         旅のしおり作成
     </div>
-
 </div>
 
 <!-- メッセージ -->
@@ -50,7 +49,7 @@
         <!-- <p>{{ form.date.label }}：{{ form.date }}</p> -->
         <p>日付：<input type="date" name="date" value="{{ top_info.0.date_from|date:"Y-m-d"}}" required></p>
         <p>{{ form.main_content.label }}：{{ form.main_content }}</p>
-        <input id="input_foreign_key" type="hidden" name="top" value="{{ top_info.0.id }};"></p>
+        <input id="input_foreign_key" type="hidden" name="top" value=""></p>
 
         <button class="ui blue button mini" type="submit">保存</button>
         <button class="ui blue button mini" type="submit" name="save_and_add">保存してもう一つ追加</button>

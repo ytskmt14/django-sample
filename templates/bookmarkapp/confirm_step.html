@@ -1,0 +1,128 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block title %}旅のしおり詳細作成{% endblock %}
+
+{% block extra_css %}
+{% endblock  %}
+
+{% block content %}
+<!-- パンくずリスト -->
+<div class="ui breadcrumb">
+  <a class="section" href="{% url 'bookmarkapp:index' %}">旅行のしおり一覧</a>
+  <div class="divider"> > </div>
+  <div class="active section">
+    旅のしおり作成
+  </div>
+</div>
+
+<!-- メッセージ -->
+{% if messages %}
+{% for message in messages %}
+{% if message.tags == "error" %}
+<div class="ui negative message">
+  <i class="close icon"></i>
+  <div class="header">
+    {{ message }}
+  </div>
+  <p>正しい値を入力してください。</p>
+</div>
+{% elif message.tags == "success" %}
+<div class="ui positive message">
+  <i class="close icon"></i>
+  <div class="header">
+    {{ message }}
+  </div>
+  <p>登録されました。</p>
+</div>
+{% endif %}
+{% endfor %}
+{% endif %}
+
+<!-- メイン処理 -->
+<h3>内容を確認してください</h3>
+<hr color="#C0C0C0">
+<div class="ui steps">
+  <div class="step">
+    <i class="plane icon"></i>
+    <div class="content">
+      <div class="title">Travel Plan</div>
+      <div class="description">いつ・どこに行く？</div>
+    </div>
+  </div>
+  <div class="step">
+    <i class="map icon"></i>
+    <div class="content">
+      <div class="title">Daily Plan</div>
+      <div class="description">その日何する？</div>
+    </div>
+  </div>
+  <div class="active step">
+    <i class="handshake icon"></i>
+    <div class="content">
+      <div class="title">Confirm Plan</div>
+      <div class="description">これでOK？</div>
+    </div>
+  </div>
+</div>
+
+<table class="ui padded table">
+  <thead>
+    <tr>
+      <th style="width:250px;">期間</th>
+      <th style="width:300px;">タイトル</th>
+      <th>内容</th>
+      <th style="width:90px;">
+        <form class="ui form" action="" method="POST">{% csrf_token %}
+          <button class="ui gray button mini" type="submit" name="next" value="edit_top">編集</button>
+        </form>
+      </th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>{{form.date_from.value}}　～　{{form.date_to.value}}</td>
+      <td>{{form.title.value}}</td>
+      <td>{{form.memo.value}}</td>
+      <td></td>
+    </tr>
+  </tbody>
+</table>
+<table class="ui compact table">
+  <thead>
+    <tr>
+      <th style="width:135px;">日付</th>
+      <th>やること</th>
+      <th style="width:90px;">
+        <form class="ui form" action="" method="POST">{% csrf_token %}
+          <button class="ui gray button mini" type="submit" name="next" value="back_detail">編集</button>
+        </form>
+      </th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for detail in detail_work %}
+    <tr>
+      <td>{{ detail.date }}</td>
+      <td>{{ detail.main_content }}</td>
+      <td></td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+<form class="ui form" action="" method="POST">{% csrf_token %}
+  <br>
+  <h4>OKだったら保存して詳細なスケジュールを作ろう！</h4>
+  <h4 style="color: blue;">※編集画面でサムネイル画像を設定できます。</h4>
+  <button class="ui blue button mini" type="submit" name="next" value="create" onclick="return confirm('登録してよろしいですか？')">保存</button>
+</form>
+{% endblock %}
+
+{### ページごとのjsを定義 ###}
+{% block extra_js %}
+<script type="text/javascript">
+  // ID名「input_foreign_key」のvalueに外部キーを代入
+  document.getElementById('input_foreign_key').value = {{ top_info.0.id }};
+</script>
+{% endblock  %}
