@@ -19,24 +19,24 @@
 
 <!-- メッセージ -->
 {% if messages %}
-{% for message in messages %}
-{% if message.tags == "error" %}
-<div class="ui negative message">
-    <i class="close icon"></i>
-    <div class="header">
-        {{ message }}
-    </div>
-    <p>正しい値を入力してください。</p>
-</div>
-{% elif message.tags == "success" %}
-<div class="ui positive message">
-    <i class="close icon"></i>
-    <div class="header">
-        {{ message }}
-    </div>
-</div>
-{% endif %}
-{% endfor %}
+    {% for message in messages %}
+        {% if message.tags == "error" %}
+            <div class="ui negative message">
+                <i class="close icon"></i>
+                <div class="header">
+                    {{ message }}
+                </div>
+                <p>正しい値を入力してください。</p>
+            </div>
+        {% elif message.tags == "success" %}
+            <div class="ui positive message">
+                <i class="close icon"></i>
+                <div class="header">
+                    {{ message }}
+                </div>
+            </div>
+        {% endif %}
+    {% endfor %}
 {% endif %}
 
 <!-- メイン処理 -->
@@ -66,42 +66,45 @@
     </div>
 </div>
 <h4>旅行予定期間</h4>
-{{form.date_from.value}}　～　{{form.date_to.value}}
+{{top_info.date_from.value}}　～　{{top_info.date_to.value}}
+<!-- 明細行を作成した場合、一覧を表示 -->
 {% if detail_work != null %}
-<table class="ui compact table">
-    <thead>
-        <tr>
-            <th>日付</th>
-            <th>やること</th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-        {% for detail in detail_work %}
-        {% if selected_detail.0.id == detail.id %}
-        <tr style="width:90px; background-color: yellow;">
-        {% else %}
-        <tr>
-        {% endif %}
-            <td style="width:135px;">{{ detail.date }}</td>
-            <td>{{ detail.main_content }}</td>
-            <td style="width:90px;">
-                <form class="ui form" action="" method="POST">{% csrf_token %}
-                    <input type="hidden" name="detail_id" value={{detail.id}}></p>
-                    <button class="ui gray button mini" type="submit" name="next" value="detail_edit"
-                        style="vertical-align: middle;">編集</button>
-                </form>
-            </td>
-        </tr>
-        {% endfor %}
-    </tbody>
-</table>
+    <table class="ui compact table">
+        <thead>
+            <tr>
+                <th>日付</th>
+                <th>やること</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for detail in detail_work %}
+                <!-- 編集中の行の背景色を追加 -->
+                {% if selected_detail.0.id == detail.id %}
+                <tr style="width:90px; background-color: yellow;">
+                {% else %}
+                <tr>
+                {% endif %}
+                    <td style="width:135px;">{{ detail.date }}</td>
+                    <td>{{ detail.main_content }}</td>
+                    <td style="width:90px;">
+                        <!-- 選択行のidを隠し項目で渡す -->
+                        <form class="ui form" action="" method="POST">{% csrf_token %}
+                            <input type="hidden" name="detail_id" value={{detail.id}}></p>
+                            <button class="ui gray button mini" type="submit" name="next" value="detail_edit"
+                                style="vertical-align: middle;">編集</button>
+                        </form>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
 {% endif %}
 <hr color="#C0C0C0">
 <form action="" method="POST" enctype="multipart/form-data">{% csrf_token %}
     <h4>何日に？</h4>
     <div class="ui input">
-        <input type="date" id="date" name="date" value="{{form.date_from.value}}">
+        <input type="date" id="date" name="date" value="{{top_info.date_from.value}}">
     </div>
     <h4>なにする？</h4>
     <div class="ui input">
@@ -109,18 +112,21 @@
     </div>
     <br>
     <br>
+
+    <!-- 行選択してない場合は追加ボタンを更新・削除ボタンに変更 -->
     {% if selected_detail == null %}
-    {% if top_to_detail != null %}
-    <button class="ui gray button mini" type="submit" name="next" value="back_top">戻る</button>
-    {% endif %}
-    <button class="ui blue button mini" id="save_and_add" type="submit" name="next" value="save_and_add">追加</button>
-    <button class="ui blue button mini" type="submit" name="next" value="detail_confirm">確認画面へ</button>
+        <!-- top画面から遷移してきた場合は戻るボタンを表示 -->
+        {% if top_to_detail != null %}
+            <button class="ui gray button mini" type="submit" name="next" value="back_top">戻る</button>
+        {% endif %}
+            <button class="ui blue button mini" id="save_and_add" type="submit" name="next" value="save_and_add">追加</button>
+            <button class="ui blue button mini" type="submit" name="next" value="detail_confirm">確認画面へ</button>
     {% else %}
-    <!-- 更新用id -->
-    <input type="hidden" name="detail_id" value={{selected_detail.0.id}}></p>
-    <button class="ui blue button mini" id="detail_update" type="submit" name="next" value="detail_update">修正</button>
-    <button class="ui red button mini" type="submit" name="next" value="detail_delete" onclick="return confirm('本当に削除しますか？')">削除</button>
-    <button class="ui blue button mini" type="submit" name="next" value="detail_confirm">確認画面へ</button>
+        <!-- 更新用id -->
+        <input type="hidden" name="detail_id" value={{selected_detail.0.id}}></p>
+        <button class="ui blue button mini" id="detail_update" type="submit" name="next" value="detail_update">修正</button>
+        <button class="ui red button mini" type="submit" name="next" value="detail_delete" onclick="return confirm('本当に削除しますか？')">削除</button>
+        <button class="ui blue button mini" type="submit" name="next" value="detail_confirm">確認画面へ</button>
     {% endif %}
 </form>
 {% endblock %}
@@ -137,6 +143,7 @@
         document.getElementById("main_content").required = false;
     });
 
+    // 明細行編集時に編集中の日付とやることを表示
     {% if selected_detail != null %}
         document.getElementById('date').value = "{{ selected_detail.0.date|date:"Y-m-d" }}";
         document.getElementById('main_content').value = "{{ selected_detail.0.main_content }}";

@@ -19,25 +19,25 @@
 
 <!-- メッセージ -->
 {% if messages %}
-{% for message in messages %}
-{% if message.tags == "error" %}
-<div class="ui negative message">
-  <i class="close icon"></i>
-  <div class="header">
-    {{ message }}
-  </div>
-  <p>正しい値を入力してください。</p>
-</div>
-{% elif message.tags == "success" %}
-<div class="ui positive message">
-  <i class="close icon"></i>
-  <div class="header">
-    {{ message }}
-  </div>
-  <p>登録されました。</p>
-</div>
-{% endif %}
-{% endfor %}
+  {% for message in messages %}
+    {% if message.tags == "error" %}
+      <div class="ui negative message">
+        <i class="close icon"></i>
+        <div class="header">
+          {{ message }}
+        </div>
+        <p>正しい値を入力してください。</p>
+      </div>
+    {% elif message.tags == "success" %}
+      <div class="ui positive message">
+        <i class="close icon"></i>
+        <div class="header">
+          {{ message }}
+        </div>
+        <p>登録されました。</p>
+      </div>
+    {% endif %}
+  {% endfor %}
 {% endif %}
 
 <!-- メイン処理 -->
@@ -82,9 +82,9 @@
   </thead>
   <tbody>
     <tr>
-      <td>{{form.date_from.value}}　～　{{form.date_to.value}}</td>
-      <td>{{form.title.value}}</td>
-      <td>{{form.memo.value}}</td>
+      <td>{{top_info.date_from.value}}　～　{{top_info.date_to.value}}</td>
+      <td>{{top_info.title.value}}</td>
+      <td>{{top_info.memo.value}}</td>
       <td></td>
     </tr>
   </tbody>
@@ -121,8 +121,4 @@
 
 {### ページごとのjsを定義 ###}
 {% block extra_js %}
-<script type="text/javascript">
-  // ID名「input_foreign_key」のvalueに外部キーを代入
-  document.getElementById('input_foreign_key').value = {{ top_info.0.id }};
-</script>
 {% endblock  %}
