@@ -60,7 +60,7 @@ class DetailCreateView(CreateView):
         # バリデーションに失敗した時
         messages.error(self.request, "登録できませんでした。")
         return super().form_invalid(form)
-    
+
 
 detail_create = DetailCreateView.as_view()
 
@@ -84,7 +84,7 @@ class SubDetailCreateView(CreateView):
         # バリデーションに成功した時
         self.object = post = form.save()
         messages.success(self.request, f'旅のしおり副詳細を修正しました。 日付:{post.detail.date},　時間:{post.time},　やること:{post.main_content}')
-        
+
                  # 保存してもう一つ追加ボタンのとき
         if 'save_and_add' in self.request.POST:
             return redirect(reverse("bookmarkapp:sub_detail_create", kwargs={"top_pk": self.kwargs['top_pk'], "detail_pk": self.kwargs['detail_pk']}))
@@ -95,7 +95,7 @@ class SubDetailCreateView(CreateView):
         # バリデーションに失敗した時
         messages.error(self.request, "登録できませんでした。")
         return super().form_invalid(form)
-        
+
 sub_detail_create = SubDetailCreateView.as_view()
 
 # 旅行メイン情報修正用View
@@ -118,7 +118,7 @@ class TopUpdateView(UpdateView):
         messages.error(self.request, "更新できませんでした。")
         return super().form_invalid(form)
 
-top_update = TopUpdateView.as_view()    
+top_update = TopUpdateView.as_view()
 
 # 旅行詳細情報修正用View
 class DetailUpdateView(UpdateView):
@@ -258,7 +258,7 @@ class TopCreateStepView(FormView):
                 # detail編集画面に戻った場合はwork情報を取得し表示
                 elif request.POST.get('next', '') == 'back_detail':
                     ctx['detail_work'] = DetailWork.objects.all().order_by('date')
-                    return render(request, 'bookmarkapp/detail_step.html', ctx) 
+                    return render(request, 'bookmarkapp/detail_step.html', ctx)
                 # top編集画面を修正する場合はボタンを制御するためにconfirmed_flgを立てる
                 elif request.POST.get('next', '') == 'edit_top':
                     ctx['confirmed'] = '1'

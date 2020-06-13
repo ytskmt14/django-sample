@@ -47,7 +47,7 @@
             <div class="header">
                 {{ item.date_from }} ~ {{ item.date_to }}
             </div>
-            
+
             <a href="{% url 'bookmarkapp:detail' item.pk %}" class="image hover-darken">
                 {% if item.images.url != "" %}
                     <img src="{{ item.images.medium.url }}">
@@ -62,8 +62,6 @@
                         {{ item.memo }}
                     </div>
                 </h4>
-                <a href="{% url 'bookmarkapp:top_update' item.pk %}" class="ui green button mini" role="button">編集</a>
-                <a href="{% url 'bookmarkapp:top_delete' item.pk %}" class="ui orange button mini" role="button">削除</a>
             </div>
         </div>
     </div>
