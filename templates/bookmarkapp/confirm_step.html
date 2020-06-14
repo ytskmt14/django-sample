@@ -82,9 +82,9 @@
   </thead>
   <tbody>
     <tr>
-      <td>{{top_info.date_from.value}}　～　{{top_info.date_to.value}}</td>
-      <td>{{top_info.title.value}}</td>
-      <td>{{top_info.memo.value}}</td>
+      <td>{{top_info.date_from}}　～　{{top_info.date_to}}</td>
+      <td>{{top_info.title}}</td>
+      <td>{{top_info.memo}}</td>
       <td></td>
     </tr>
   </tbody>
@@ -102,7 +102,7 @@
     </tr>
   </thead>
   <tbody>
-    {% for detail in detail_work %}
+    {% for _, detail in detail_info.items %}
     <tr>
       <td>{{ detail.date }}</td>
       <td>{{ detail.main_content }}</td>

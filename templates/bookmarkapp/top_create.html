@@ -34,6 +34,8 @@
 
 <!-- メイン処理 -->
 <h3>新しい旅行の予定を立てよう！</h3>
+<h4>{{ top_info }}</h4>
+<h4>{{ detail_info }}</h4>
 <hr color="#C0C0C0">
 <div class="ui steps">
     <div class="active step">
@@ -61,24 +63,24 @@
 <form action="" method="POST" enctype="multipart/form-data">{% csrf_token %}
     <h4>旅行のタイトルは？</h4>
     <div class="ui input">
-        <input type="text" id="title" size="80" placeholder="家族みんなで温泉旅行！" value="" name="title" required>
+        <input type="text" id="title" size="80" placeholder="家族みんなで温泉旅行！" value="{{ top_info.title }}" name="title" required>
     </div>
     <h4>どんな旅行？</h4>
     <div class="ui input">
-        <input type="text" id="memo" size="80" placeholder="年に一度の恒例行事" value="" name="memo">
+        <input type="text" id="memo" size="80" placeholder="年に一度の恒例行事" value="{{ top_info.memo }}" name="memo">
     </div>
     <div class="ui form" style="margin-top:20px;">
         <div class="four fields">
             <div class="field">
                 <h4>いつから？</h4>
                 <div class="ui input">
-                    <input type="date" value="{{top_info.date_from.value}}" name="date_from" required>
+                    <input type="date" value="{{top_info.date_from}}" name="date_from" required>
                 </div>
             </div>
             <div class="field">
                 <h4>いつまで？</h4>
                 <div class="ui input">
-                    <input type="date" value="{{top_info.date_to.value}}" name="date_to" required>
+                    <input type="date" value="{{top_info.date_to}}" name="date_to" required>
                 </div>
             </div>
         </div>

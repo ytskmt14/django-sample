@@ -1,5 +1,6 @@
 from django import forms
-from .models import TopListModel, DetailListModel, SubDetailListModel, DetailWork
+from .models import TopListModel, DetailListModel, SubDetailListModel
+
 
 class TopForm(forms.ModelForm):
     title = forms.CharField(label='タイトル', max_length=50, required=True, widget=forms.TextInput())
@@ -18,7 +19,7 @@ class DetailForm(forms.ModelForm):
 
     class Meta:
         model = DetailListModel
-        fields = ('date', 'main_content', 'top')
+        fields = ('date', 'main_content')
 
 class SubDetailForm(forms.ModelForm):
     time = forms.TimeField(label='時間', required=True, widget=forms.TimeInput())
@@ -41,14 +42,6 @@ class SubDetailForm(forms.ModelForm):
     class Meta:
         model = SubDetailListModel
         fields = ('time', 'main_content', 'images', 'hp_url', 'map_url', 'root_url', 'content1', 'content2', 'content3', 'content4', 'content5', 'content6', 'content7', 'content8', 'content9', 'content10', 'detail')
-
-class DetailWorkForm(forms.ModelForm):
-    date = forms.DateField(label='日付', required=True, widget=forms.DateInput())
-    main_content = forms.CharField(label='やること', max_length=100, widget=forms.TextInput())
-
-    class Meta:
-        model = DetailWork
-        fields = ('date', 'main_content')
 
 class DetailIdForm(forms.Form):
     detail_id = forms.IntegerField()

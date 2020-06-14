@@ -66,54 +66,38 @@
     </div>
 </div>
 <h4>旅行予定期間</h4>
-{{top_info.date_from.value}}　～　{{top_info.date_to.value}}
-<!-- 明細行を作成した場合、一覧を表示 -->
-{% if detail_work != null %}
-    <table class="ui compact table">
-        <thead>
-            <tr>
-                <th>日付</th>
-                <th>やること</th>
-                <th></th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for detail in detail_work %}
-                <!-- 編集中の行の背景色を追加 -->
-                {% if selected_detail.0.id == detail.id %}
-                <tr style="width:90px; background-color: yellow;">
-                {% else %}
-                <tr>
-                {% endif %}
-                    <td style="width:135px;">{{ detail.date }}</td>
-                    <td>{{ detail.main_content }}</td>
-                    <td style="width:90px;">
-                        <!-- 選択行のidを隠し項目で渡す -->
-                        <form class="ui form" action="" method="POST">{% csrf_token %}
-                            <input type="hidden" name="detail_id" value={{detail.id}}></p>
-                            <button class="ui gray button mini" type="submit" name="next" value="detail_edit"
-                                style="vertical-align: middle;">編集</button>
-                        </form>
-                    </td>
-                </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-{% endif %}
-<hr color="#C0C0C0">
-<form action="" method="POST" enctype="multipart/form-data">{% csrf_token %}
-    <h4>何日に？</h4>
-    <div class="ui input">
-        <input type="date" id="date" name="date" value="{{top_info.date_from.value}}">
-    </div>
-    <h4>なにする？</h4>
-    <div class="ui input">
-        <input type="text" id="main_content" size="80" placeholder="有名な温泉巡り" name="main_content">
-    </div>
-    <br>
-    <br>
+{{top_info.date_from}}　～　{{top_info.date_to}}
 
-    <!-- 行選択してない場合は追加ボタンを更新・削除ボタンに変更 -->
+<hr color="#C0C0C0">
+<form action="" method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ formset.management_form }}
+    <div class="ui grid">
+        {% for form in formset %}
+            {{ form.id }}
+            <div class="four wide column">
+                {% if forloop.first %}
+                    <h4>何日に？</h4>
+                {% endif %}
+                <div class="ui input">
+                    <input type="date" id="date{{ forloop.counter0 }}" name="date" readonly>
+                </div>
+            </div>
+            <div class="twelve wide column">
+                {% if forloop.first%}
+                    <h4>なにする？</h4>
+                {% endif %}
+                <div class="ui input">
+                    <input type="text" id="main_content" size="80" placeholder="有名な温泉巡り" name="main_content">
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+    <div style="margin-top:30px">
+        <a class="ui blue button mini" href="{% url 'bookmarkapp:top_create' %}" >戻る</a>
+        <button class="ui blue button mini" type="submit">確認画面へ</button>
+    </div>
+    {% comment %} <!-- 行選択してない場合は追加ボタンを更新・削除ボタンに変更 -->
     {% if selected_detail == null %}
         <!-- top画面から遷移してきた場合は戻るボタンを表示 -->
         {% if top_to_detail != null %}
@@ -127,13 +111,18 @@
         <button class="ui blue button mini" id="detail_update" type="submit" name="next" value="detail_update">修正</button>
         <button class="ui red button mini" type="submit" name="next" value="detail_delete" onclick="return confirm('本当に削除しますか？')">削除</button>
         <button class="ui blue button mini" type="submit" name="next" value="detail_confirm">確認画面へ</button>
-    {% endif %}
+    {% endif %} {% endcomment %}
 </form>
 {% endblock %}
 
 {### ページごとのjsを定義 ###}
 {% block extra_js %}
 <script type="text/javascript">
+$(function () {
+    {% for date in date_list %}
+        $('#date{{ forloop.counter0 }}').val('{{ date }}');
+    {% endfor %}
+})
     // 戻るボタン押下時以外は必須項目に変更
     $('#save_and_add, #detail_update').hover(() => {
         document.getElementById("date").required = true;
@@ -142,7 +131,6 @@
         document.getElementById("date").required = false;
         document.getElementById("main_content").required = false;
     });
-
     // 明細行編集時に編集中の日付とやることを表示
     {% if selected_detail != null %}
         document.getElementById('date').value = "{{ selected_detail.0.date|date:"Y-m-d" }}";

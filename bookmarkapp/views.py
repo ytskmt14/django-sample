@@ -1,11 +1,15 @@
-from django.views.generic import ListView, DetailView, CreateView, DeleteView, UpdateView, FormView
-from .models import TopListModel, DetailListModel, SubDetailListModel, DetailWork
-from django.urls import reverse_lazy, reverse
-from django.shortcuts import redirect, render, get_object_or_404
+import datetime
+
 from django.contrib import messages
-from django.views import generic
-from .forms import TopForm, DetailForm, SubDetailForm, DetailWorkForm, DetailIdForm
 from django.db.models import Max
+from django.forms import formset_factory
+from django.shortcuts import redirect, render, get_object_or_404
+from django.urls import reverse_lazy, reverse
+from django.views import generic
+from django.views.generic import ListView, DetailView, CreateView, DeleteView, UpdateView, FormView
+
+from .forms import TopForm, DetailForm, SubDetailForm, DetailIdForm
+from .models import TopListModel, DetailListModel, SubDetailListModel
 
 # 旅行一覧ページ用View
 class IndexView(ListView):
@@ -238,131 +242,93 @@ class SubDetailDeleteView(DeleteView):
 
 sub_detail_delete = SubDetailDeleteView.as_view()
 
-# 旅行情報作成用View（３STEP）
-class TopCreateStepView(FormView):
-    template_name = "bookmarkapp/top_create.html"
-    form_class = TopForm
+def top_create(request):
+    """
+    旅行情報作成（Step1）のView
+    TopListModelに対応するデータを扱う
+    """
+    if request.method == 'GET':
+        top_info = request.session.get('top_info')
+        detail_info = request.session.get('detail_info')
+        return render(request, "bookmarkapp/top_create.html", {'top_info':top_info})
+    elif request.method == 'POST':
+        form = TopForm(request.POST)
+        if form.is_valid():
+            # セッションに編集したtop情報を保存
+            top_info = {
+                'title': form.cleaned_data['title'],
+                'memo': form.cleaned_data['memo'],
+                'date_from': form.cleaned_data['date_from'].isoformat(),
+                'date_to': form.cleaned_data['date_to'].isoformat(),
+            }
+            request.session['top_info'] = top_info
+            return redirect('bookmarkapp:plan_create')
+        else:
+            messages.error(request, "値に不正があります。")
+            return render(request, "bookmarkapp/top_create.html", {'top_info':top_info})
 
-    # post実行時のvalueによって処理を分岐
-    def post(self, request, *args, **kwargs):
-        ctx = {}
-        # top_infoをセッションから取得し、条件分岐に応じて追加で処理を行う
-        if request.POST.get('next', '') in ('back_top', 'back_detail', 'edit_top', 'detail_confirm', 'detail_edit', 'detail_update', 'detail_delete', 'save_and_add'):
-            if 'top_info' in request.session:
-                top_info = request.session['top_info']
-                top_form = TopForm(top_info)
-                ctx['top_info'] = top_form
-                # top編集画面に戻った場合は画面表示のみ
-                if request.POST.get('next', '') == 'back_top':
-                    return render(request, self.template_name, ctx)
-                # detail編集画面に戻った場合はwork情報を取得し表示
-                elif request.POST.get('next', '') == 'back_detail':
-                    ctx['detail_work'] = DetailWork.objects.all().order_by('date')
-                    return render(request, 'bookmarkapp/detail_step.html', ctx)
-                # top編集画面を修正する場合はボタンを制御するためにconfirmed_flgを立てる
-                elif request.POST.get('next', '') == 'edit_top':
-                    ctx['confirmed'] = '1'
-                    return render(request, self.template_name, ctx)
-                # detail編集画面から確認画面に遷移する場合はwork情報を取得し表示
-                elif request.POST.get('next', '') == 'detail_confirm':
-                    ctx['detail_work'] = DetailWork.objects.all().order_by('date')
-                    return render(request, 'bookmarkapp/confirm_step.html', ctx)
-                # detail編集画面でwork情報を編集する場合はwork情報と選択行の情報を取得
-                elif request.POST.get('next', '') == 'detail_edit':
-                    detail_id_form = DetailIdForm(request.POST)
-                    if detail_id_form.is_valid():
-                        ctx['detail_work'] = DetailWork.objects.all().order_by('date')
-                        ctx['selected_detail'] = DetailWork.objects.filter(id=detail_id_form.cleaned_data['detail_id'])
-                        return render(request, 'bookmarkapp/detail_step.html', ctx) 
-                # detail編集画面で選択したwork情報を更新する場合は更新処理を行い、表示のため更新後work情報を取得
-                elif request.POST.get('next', '') == 'detail_update':
-                    detail_id_form = DetailIdForm(request.POST)
-                    if detail_id_form.is_valid():
-                        selected_detail = get_object_or_404(DetailWork, id=detail_id_form.cleaned_data['detail_id'])
-                        detail_work_form = DetailWorkForm(request.POST, instance=selected_detail)
-                        if detail_work_form.is_valid():
-                            detail_work_form.save()
-                            messages.success(self.request, f'予定を修正しました。')
-                            ctx['detail_work'] = DetailWork.objects.all().order_by('date')
-                            return render(request, 'bookmarkapp/detail_step.html', ctx) 
-                # detail編集画面で選択したwork情報を削除する場合は削除処理を行い、表示のため更新後work情報を取得
-                elif request.POST.get('next', '') == 'detail_delete':
-                    detail_id_form = DetailIdForm(request.POST)
-                    if detail_id_form.is_valid():
-                        DetailWork.objects.filter(id=detail_id_form.cleaned_data['detail_id']).delete()
-                        messages.success(self.request, f'予定を削除しました。')
-                        ctx['detail_work'] = DetailWork.objects.all().order_by('date')
-                        return render(request, 'bookmarkapp/detail_step.html', ctx) 
-                # detail編集画面でワーク情報を登録する場合
-                elif request.POST.get('next', '') == 'save_and_add':
-                    detail_work_form = DetailWorkForm(request.POST)
-                    if detail_work_form.is_valid():
-                        # ワークテーブルに登録
-                        date = detail_work_form.cleaned_data['date']
-                        main_content=detail_work_form.cleaned_data['main_content']
-                        detail_work_form.save()
-                        # ワークテーブルを取得
-                        ctx['detail_work'] = DetailWork.objects.all().order_by('date')
-                        messages.success(self.request, f'予定を作成しました。  日付:{date},　やること:{main_content}')
-                        return render(request, 'bookmarkapp/detail_step.html', ctx)
-                    else:
-                        messages.error(self.request, "値に不正があります。")
-                        return render(request, 'bookmarkapp/detail_step.html', ctx)
+def plan_create(request):
+    """
+    旅行情報作成（Step2）のView
+    DetailListModelに対応するデータを扱う
+    """
+    session_top_info = request.session.get('top_info')
+    if session_top_info is None:
+        # セッション情報を持たなければ、step1にリダイレクト
+        return redirect('bookmarkapp:top_create')
+    else:
+        date_from = datetime.datetime.strptime(session_top_info['date_from'], '%Y-%m-%d')
+        date_to = datetime.datetime.strptime(session_top_info['date_to'], '%Y-%m-%d')
+        time_delta = date_to - date_from
 
-        # top編集画面からdetail編集画面または確認画面に遷移した場合
-        elif request.POST.get('next', '') in ('create_detail','top_confirm'):
-            form = TopForm(request.POST)
-            if form.is_valid():
-                ctx = {'top_info': form}
-                # セッションに編集したtop情報を保存
-                top_info = {
-                    'title': form.cleaned_data['title'],
-                    'memo': form.cleaned_data['memo'],
-                    'date_from': form.cleaned_data['date_from'].isoformat(),
-                    'date_to': form.cleaned_data['date_to'].isoformat(),
+        DetailCreateFormSet = formset_factory(
+            form=DetailForm, extra= time_delta.days + 1 ,max_num= time_delta.days + 1
+        )
+
+    if request.method == 'GET':
+        formset = DetailCreateFormSet()
+        date_list = []
+        for i in range(time_delta.days + 1):
+            date = date_from + datetime.timedelta(days=i)
+            date_list.append(date.strftime("%Y-%m-%d"))
+
+        ctx = {'formset': formset, 'top_info': session_top_info, 'time_delta': time_delta.days + 1, 'date_list': date_list}
+        return render(request, 'bookmarkapp/detail_step.html', ctx)
+    elif request.method == 'POST':
+        formset = DetailCreateFormSet(request.POST)
+        if formset.is_valid():
+            detail_info = {}
+            date_list = formset.data.getlist('date')
+            main_content_list = formset.data.getlist('main_content')
+            for index, date in enumerate(date_list):
+                detail_info[index] = {
+                    'date': date_list[index],
+                    'main_content': main_content_list[index],
                 }
-                request.session['top_info'] = top_info
-                if request.POST.get('next', '') == 'create_detail':
-                    # ワーク情報を削除
-                    DetailWork.objects.all().delete()
-                    # 戻るボタンを表示させるためフラグを立てる
-                    ctx['top_to_detail'] = 1
-                    return render(request, 'bookmarkapp/detail_step.html', ctx)
-                else:
-                    # ワーク情報を取得
-                    ctx["detail_work"] = DetailWork.objects.all().order_by('date')
-                    return render(request, 'bookmarkapp/confirm_step.html', ctx)
-                
-            else:
-                messages.error(self.request, "値に不正があります。")
-                return render(request, self.template_name, {'top_info': form})
+            request.session['detail_info'] = detail_info
+            return redirect(reverse("bookmarkapp:confirm"))
+        else:
+            formset = DetailCreateFormSet(request.POST)
+            return render(request, 'bookmarkapp/detail_step.html', {'formset': formset})
 
-        # 確認画面でデータを登録する場合
-        elif request.POST.get('next', '') == 'create':
-            if 'top_info' in request.session:
-                title = request.session['top_info']['title']
-                # top_infoの値をセッションから取得し登録
-                TopListModel.objects.create_top_list(
-                    title=title,
-                    memo=request.session['top_info']['memo'],
-                    date_from=request.session['top_info']['date_from'],
-                    date_to=request.session['top_info']['date_to'],
-                )
-                # detailの情報をワークから取得し登録
-                detail_works = DetailWork.objects.all().order_by('date')
-                top = TopListModel.objects.all().aggregate(Max('id'))
-                for detail in detail_works:
-                    DetailListModel.objects.create_detail_list(
-                        date=detail.date,
-                        main_content=detail.main_content,
-                        top_id=top['id__max']
-                    )
-                # ワークテーブルの削除
-                DetailWork.objects.all().delete()
-                messages.success(self.request, f'旅のしおりを作成しました。 タイトル:{title}')
-                # セッションに保管した情報の削除
-                request.session.pop('top_info')
+def confirm(request):
+    """
+    旅行情報作成（Step3）のView
+    入力情報の確認を行う。
+    """
+    top_info = request.session.get('top_info')
+    detail_info = request.session.get('detail_info')
 
-                return redirect(reverse_lazy('bookmarkapp:index'))
-
-top_create = TopCreateStepView.as_view()
+    if top_info is None or detail_info is None:
+        print('top_info or detail_info is None')
+        # セッション情報を持たなければ、step1にリダイレクト
+        return redirect('bookmarkapp:top_create')
+    else:
+        if request.method == 'GET':
+            ctx = {
+                'top_info': top_info,
+                'detail_info': detail_info
+            }
+            return render(request, "bookmarkapp/confirm_step.html", ctx)
+        elif request.method == 'POST':
+            return render(request, "bookmarkapp/index.html")
